@@ -1,0 +1,13 @@
+.search-div{
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.add-button{
+    float: left;
+}
+
+.search-input{
+    float: right;
+    width: 500px;
+}

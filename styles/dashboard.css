@@ -1,0 +1,111 @@
+/*slider*/
+.logo {
+    height: 32px;
+    margin: 16px;
+    text-align: center;
+    font-family: monospace;
+    text-shadow: 5px 1px 5px;
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.site-layout .site-layout-background {
+    background: #fff;
+}
+
+.dashboard-layout {
+    minHeight: '100vh'
+}
+
+.dashboard-slider {
+    height: 100vh;
+}
+
+/*content*/
+
+.dashboard-content {
+    margin: 0 16px
+}
+
+/*header*/
+.dashboard-header {
+    padding: 0;
+    background: #fff;
+    background: #001524;
+}
+
+.dashboard-breadcrumb {
+    margin: 16px 0
+}
+
+.dashboard-site-layout {
+    padding: 24px;
+    minHeight: 360px
+}
+
+.userinfo {
+    display: block;
+    float: right;
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    background-color: #c5c5c5;
+    margin-left: 50px;
+    position: relative;
+    right: 50px;
+    top: 16px;
+}
+
+.userinfo-icon {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+}
+
+.userinfo-icon, .header-menu, .bell-icon {
+    color: white;
+}
+
+.bell-icon, .header-menu, .logout, .userinfo {
+    cursor: pointer
+}
+
+.header-menu, .bell-icon {
+    margin: 0 50px;
+}
+
+.dashboard-header-menu {
+    float: left;
+}
+
+.bell, .logout {
+    float: right;
+}
+
+.logout {
+    position: absolute;
+    width: 70px;
+    height: 25px;
+    text-align: center;
+    vertical-align: center;
+    color: black;
+    background-color: white;
+    float: right;
+    top:45px;
+    right: 10px;
+}
+
+.logout-icon {
+    color: black;
+}
+.site-layout{
+    position: relative;
+}
+.site-layout, .icons-list {
+    overflow: hidden;
+}
+
+.hide{
+    display: none;
+}
