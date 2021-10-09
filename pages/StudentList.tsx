@@ -7,6 +7,7 @@ import {Column} from "rc-table";
 import {formatDistance, subDays} from 'date-fns'
 import {useRouter} from "next/router";
 import {AddStudentRequest} from "../libs/Entity/request/AddStudentRequest";
+import {DeleteStudentRequest} from "../libs/Entity/request/DeleteStudentRequest";
 
 // @ts-ignore
 async function fetchData(setStudentList, setTotal, currentPage, pageSize) {
@@ -30,13 +31,14 @@ export default function StudentList() {
         const {name, country, email, type} = values;
         console.log(name, country, email, type)
 
-        let loginRequest = new AddStudentRequest(name, country, email, type);
-        const resp = await studentAPI.addStudent(loginRequest);
+        let addStudentRequest = new AddStudentRequest(name, country, email, type);
+        const resp = await studentAPI.addStudent(addStudentRequest);
         debugger
         const {code, data} = resp.data;
         if (code === 201) {
             //提示成功
             message.success("添加学生数据成功！");
+            setVisible(false);
             //3秒后跳转页面
             setTimeout(function () {
                 router.push("/StudentList")
@@ -48,6 +50,25 @@ export default function StudentList() {
 
     function showForm() {
         setVisible(true);
+    }
+
+    async function deleteStudent(id: number) {
+        let deleteStudentRequest = new DeleteStudentRequest(id);
+        const resp = await studentAPI.deleteStudent(deleteStudentRequest);
+        debugger
+        const {code, data} = resp.data;
+        if (code === 200) {
+            //提示成功
+            message.success("删除学生数据成功！");
+            setVisible(false);
+            //3秒后跳转页面
+            setTimeout(function () {
+                router.push("/StudentList")
+            }, 3000)
+        } else {
+            message.error("删除学生数据失败！");
+        }
+        console.log(id);
     }
 
     useEffect(() => {
@@ -159,7 +180,9 @@ export default function StudentList() {
                     render={(text, record) => (
                         <Space size="middle">
                             <a onClick={showForm}>Edit</a>
-                            <a>Delete</a>
+                            <a onClick={()=>{
+                                deleteStudent(record.id)}
+                            }>Delete</a>
                         </Space>
                     )}
                 />
