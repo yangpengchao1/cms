@@ -1,24 +1,25 @@
-import {Layout, Menu, Breadcrumb, message} from 'antd';
+import {Breadcrumb, Layout, Menu, message} from 'antd';
 import {
-    DesktopOutlined,
-    PieChartOutlined,
-    FileOutlined,
+    BellOutlined,
+    DashboardOutlined,
+    DeploymentUnitOutlined,
+    EditOutlined,
+    FileAddOutlined,
+    LogoutOutlined,
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+    MessageOutlined,
+    ProjectOutlined,
+    ReadOutlined,
+    SolutionOutlined,
     TeamOutlined,
     UserOutlined,
-    DashboardOutlined,
-    SolutionOutlined,
-    DeploymentUnitOutlined,
-    ReadOutlined,
-    ProjectOutlined,
-    FileAddOutlined, EditOutlined, MessageOutlined, MenuFoldOutlined, BellOutlined, MenuUnfoldOutlined, LogoutOutlined,
 } from '@ant-design/icons';
-import {useEffect, useState} from "react";
-import {API_HOST} from "../libs/constant/Config";
-import {RequestURL} from "../libs/enum/RequestURL";
+import {useState} from "react";
 import {useRouter} from "next/router";
-import {createPost} from "../libs/API/AuthAPI";
 import StudentList from "./StudentList";
-import Link from "next/link";
+import {authAPI} from "../libs/API/AuthAPI";
+import {LogoutRequest} from "../libs/Entity/request/LogoutRequest";
 
 const {Header, Content, Sider} = Layout;
 const {SubMenu} = Menu;
@@ -33,17 +34,15 @@ export default function Dashboard() {
 
     function onCollapse(collapsedFlag: boolean) {
         setCollapsed(collapsedFlag);
-    };
+    }
 
     function operateSlider() {
         onCollapse(!collapsed);
     }
 
     async function userLogout() {
-        const url = API_HOST + RequestURL.LOGOUT;
-        const requestData = "";
-        const resp = await createPost(url, requestData);
-        // @ts-ignore
+        let logoutRequest = new LogoutRequest();
+        const resp = await authAPI.logout(logoutRequest);
         const {code} = resp.data;
         if (code == 201) {
             localStorage.clear();
@@ -58,7 +57,7 @@ export default function Dashboard() {
         operateLogoutTip(true);
     }
 
-    function hiddenLogoutTip(){
+    function hiddenLogoutTip() {
         operateLogoutTip(false);
     }
 
@@ -66,7 +65,7 @@ export default function Dashboard() {
         setShowLogoutFlag(flag);
     }
 
-    function getStudentListPage(){
+    function getStudentListPage() {
         // @ts-ignore
         setContent(<StudentList/>);
         setBreadcrumb1("Student");
@@ -89,9 +88,9 @@ export default function Dashboard() {
                         <Menu.Item key="6" icon={<TeamOutlined/>}>Teacher List</Menu.Item>
                     </SubMenu>
                     <SubMenu key="sub3" icon={<ReadOutlined/>} title="Course">
-                        <Menu.Item key="6" icon={<ProjectOutlined/>}>All Courses</Menu.Item>
-                        <Menu.Item key="6" icon={<FileAddOutlined/>}>Add Course</Menu.Item>
-                        <Menu.Item key="6" icon={<EditOutlined/>}>Edit Course</Menu.Item>
+                        <Menu.Item key="7" icon={<ProjectOutlined/>}>All Courses</Menu.Item>
+                        <Menu.Item key="8" icon={<FileAddOutlined/>}>Add Course</Menu.Item>
+                        <Menu.Item key="10" icon={<EditOutlined/>}>Edit Course</Menu.Item>
                     </SubMenu>
                     <Menu.Item key="9" icon={<MessageOutlined/>}>
                         Message

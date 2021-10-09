@@ -1,20 +1,9 @@
 import {useState} from "react";
-import {
-    Radio,
-    Form,
-    Input,
-    Button,
-    Checkbox,
-    message,
-    RadioChangeEvent,
-} from "antd";
-import {UserOutlined, LockOutlined} from "@ant-design/icons";
-
-import {RequestURL} from "../libs/enum/RequestURL";
-import {AES} from "crypto-js";
-import {API_HOST} from "../libs/constant/Config";
+import {Button, Checkbox, Form, Input, message, Radio, RadioChangeEvent,} from "antd";
+import {LockOutlined, UserOutlined} from "@ant-design/icons";
 import {useRouter} from "next/router";
-import {createPost} from "../libs/API/API";
+import {authAPI} from "../libs/API/AuthAPI";
+import {LoginRequest} from "../libs/Entity/request/LoginRequest";
 
 export default function Login() {
     const router = useRouter();
@@ -41,20 +30,17 @@ export default function Login() {
     };
 
     const login = async (values: any) => {
-        const {password} = values;
-        const url = API_HOST + RequestURL.LOGIN;
-        const requestData = JSON.stringify({
-            ...values,
-            password: AES.encrypt(password, "cms").toString(),
-        });
-        const resp = await createPost(url, requestData);
-        // @ts-ignore
+        const {email, password, role} = values;
+
+        let loginRequest = new LoginRequest(email, password, role);
+        const resp = await authAPI.login(loginRequest);
+        debugger
         const {code, data} = resp.data;
         if (code === 201) {
             //存储信息
             localStorage.setItem("token", data.token);
-            localStorage.setItem("userId", data.userId);
-            localStorage.setItem("role", role);
+            localStorage.setItem("userId", data.userId.toString());
+            localStorage.setItem("role", data.role);
             //跳转页面
             await router.push("/dashboard");
         } else {
@@ -89,6 +75,7 @@ export default function Login() {
                                 pattern: new RegExp(
                                     /^[A-Za-z0-9\u4e00-\u9fa5.]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
                                 ),
+                                type: 'email',
                                 message: "'email' is not a valid email",
                             },
                         ]}

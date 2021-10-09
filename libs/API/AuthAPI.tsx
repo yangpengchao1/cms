@@ -1,19 +1,18 @@
-import axios from "axios";
+import {BaseResponse} from "../Entity/response/BaseResponse";
+import BaseAPI from "./BaseAPI";
+import {AxiosResponse} from "axios";
+import {LoginRequest} from "../Entity/request/LoginRequest";
+import {LoginResponse} from "../Entity/response/LoginResponse";
+import {LogoutRequest} from "../Entity/request/LogoutRequest";
 
-export function createPost(baseURL: string, data: string) {
-    const token = localStorage.getItem("token");
-    return axios.post(baseURL, data, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-    });
+class AuthAPI extends BaseAPI {
+    public login(req: LoginRequest): Promise<AxiosResponse<BaseResponse<LoginResponse>>> {
+        return this.createPost(req);
+    }
+
+    public logout(req: LogoutRequest): Promise<AxiosResponse<BaseResponse<boolean>>> {
+        return this.createPost(req);
+    }
 }
 
-export function createGet(baseURL: string) {
-    const token = localStorage.getItem("token");
-    return axios.get(baseURL, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-    });
-}
+export const authAPI = new AuthAPI();
