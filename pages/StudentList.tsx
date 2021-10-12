@@ -10,6 +10,7 @@ import {AddStudentRequest} from "../libs/Entity/request/AddStudentRequest";
 import {DeleteStudentRequest} from "../libs/Entity/request/DeleteStudentRequest";
 import {GetStudentRequest} from "../libs/Entity/request/GetStudentRequest";
 import ModalPad from '../components/ModelPad';
+import handler from "./api/hello";
 
 // @ts-ignore
 async function fetchData(setStudentList, setTotal, currentPage, pageSize) {

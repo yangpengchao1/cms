@@ -81,12 +81,12 @@ export default function Dashboard() {
                         </Menu.Item>
                         <SubMenu key="sub1" icon={<SolutionOutlined/>} title="Student">
                             <Menu.Item key="3" icon={<TeamOutlined/>}>
-                                <Link to="/StudentList">Student List</Link>
+                                <Link to="/dashboard/studentList">Student List</Link>
                             </Menu.Item>
                         </SubMenu>
                         <SubMenu key="sub2" icon={<DeploymentUnitOutlined/>} title="Teacher">
                             <Menu.Item key="6" icon={<TeamOutlined/>}>
-                                <Link to="/TeacherList">Teacher List</Link></Menu.Item>
+                                <Link to="/dashboard/teacherList">Teacher List</Link></Menu.Item>
                         </SubMenu>
                         <SubMenu key="sub3" icon={<ReadOutlined/>} title="Course">
                             <Menu.Item key="7" icon={<ProjectOutlined/>}>All Courses</Menu.Item>
@@ -130,7 +130,7 @@ export default function Dashboard() {
                         </Breadcrumb>
                         <div className="site-layout-background dashboard-site-layout">
                             <Switch>
-                                <Route exact path="/StudentList">
+                                <Route exact path="/dashboard/studentList">
                                     <StudentList/>
                                 </Route>
 
