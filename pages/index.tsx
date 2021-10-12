@@ -23,7 +23,7 @@ export default function Login() {
     };
 
     const changeTeacher = () => {
-        setRole("teacher");
+        setRole("teachers");
     };
 
     const changeManager = () => {

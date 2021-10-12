@@ -1,16 +1,17 @@
 import {Button, message, Space, Table} from 'antd';
 import React, {useEffect, useState} from "react";
 import Search from "antd/lib/input/Search";
-import {GetStudentsRequest} from "../libs/Entity/request/GetStudentsRequest";
-import {studentAPI} from "../libs/API/StudentAPI";
+import {GetStudentsRequest} from "../../../../libs/Entity/request/GetStudentsRequest";
+import {studentAPI} from "../../../../libs/API/StudentAPI";
 import {Column} from "rc-table";
 import {formatDistance, subDays} from 'date-fns'
 import {useRouter} from "next/router";
-import {AddStudentRequest} from "../libs/Entity/request/AddStudentRequest";
-import {DeleteStudentRequest} from "../libs/Entity/request/DeleteStudentRequest";
-import {GetStudentRequest} from "../libs/Entity/request/GetStudentRequest";
-import ModalPad from '../components/ModelPad';
-import handler from "./api/hello";
+import {AddStudentRequest} from "../../../../libs/Entity/request/AddStudentRequest";
+import {DeleteStudentRequest} from "../../../../libs/Entity/request/DeleteStudentRequest";
+import {GetStudentRequest} from "../../../../libs/Entity/request/GetStudentRequest";
+import ModalPad from '../../../../components/ModelPad';
+import handler from "../../../api/hello";
+import AppLayout from "../../../../components/layout/AppLayout";
 
 // @ts-ignore
 async function fetchData(setStudentList, setTotal, currentPage, pageSize) {
@@ -20,7 +21,7 @@ async function fetchData(setStudentList, setTotal, currentPage, pageSize) {
     await setTotal(resp.data.data.total);
 }
 
-export default function StudentList() {
+export default function Students() {
 
     const router = useRouter();
     const [studentList, setStudentList] = useState([]);
@@ -29,7 +30,7 @@ export default function StudentList() {
     const [pageSize, setPageSize] = useState(10);
     const [total, setTotal] = useState(1);
     const [title, setTitle] = useState("");
-    const [studentData, setStudentData] = useState(null);
+    const [studentData, setStudentData] = useState({});
 
     const onCreate = async (values: any) => {
         debugger
@@ -48,7 +49,7 @@ export default function StudentList() {
             setTimeout(function () {
                 debugger
                 alert()
-                router.push("/StudentList")
+                router.push("/Index")
             }, 3000)
         } else {
             message.error("Add failed ！");
@@ -57,12 +58,12 @@ export default function StudentList() {
 
     function showForm() {
         setVisible(true);
-        setTitle("Add student information");
+        setTitle("Add students information");
     }
 
     async function updateStudent(id: number) {
         showForm();
-        setTitle("Update student information");
+        setTitle("Update students information");
         let getStudentRequest = new GetStudentRequest(id);
         const resp = await studentAPI.getStudent(getStudentRequest);
         const {code, data} = resp.data;
@@ -81,7 +82,7 @@ export default function StudentList() {
             setVisible(false);
             //3秒后跳转页面
             setTimeout(function () {
-                router.push("/StudentList")
+                router.push("/Index")
             }, 3000)
         } else {
             message.error("Delete failed ！");
@@ -146,7 +147,7 @@ export default function StudentList() {
 
     // @ts-ignore
     return (
-        <>
+        <AppLayout>
             <div className="search-div">
                 <Button type="primary" onClick={showForm}>+ Add</Button>
                 <ModalPad
@@ -199,6 +200,6 @@ export default function StudentList() {
                     )}
                 />
             </Table>
-        </>
+        </AppLayout>
     )
 }

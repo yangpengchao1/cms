@@ -50,4 +50,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
         fail->
             error message
         }
-2.dashboard.tsx --- dashboard
+2.AppLayout.tsx --- dashboard

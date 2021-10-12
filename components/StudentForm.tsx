@@ -19,7 +19,7 @@ const StudentForm = (props: PropsWithChildren<any>) => {
             name="form_in_modal"
             // initialValues={{modifier: 'public'}}
             initialValues={{
-                'name': studentData,
+                'name': studentData.name,
                 // 'checkbox-group': ['A', 'B'],
                 // rate: 3.5,
                 modifier: 'public'
@@ -31,12 +31,12 @@ const StudentForm = (props: PropsWithChildren<any>) => {
                 rules={[
                     {
                         required: true,
-                        message: 'Please input student name',
+                        message: 'Please input students name',
                     },
                 ]}
             >
                 <Input placeholder={studentData}/>
-                {/*<Input placeholder="Please input student name"/>*/}
+                {/*<Input placeholder="Please input students name"/>*/}
             </Form.Item>
 
             <Form.Item
