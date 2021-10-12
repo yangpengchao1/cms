@@ -9,7 +9,8 @@ export default function Login() {
     const router = useRouter();
     const value1 = "student";
     const onChange1 = (e: RadioChangeEvent) => {
-        console.log("radio1 checked", e.target.value);
+        // console.log("radio1 checked", e.target.value);
+
         // setState({
         //   value1: e.target.value,
         // });
@@ -34,7 +35,6 @@ export default function Login() {
 
         let loginRequest = new LoginRequest(email, password, role);
         const resp = await authAPI.login(loginRequest);
-        debugger
         const {code, data} = resp.data;
         if (code === 201) {
             //存储信息

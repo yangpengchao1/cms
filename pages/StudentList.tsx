@@ -1,5 +1,5 @@
-import {Button, Form, Input, message, Modal, Select, Space, Table} from 'antd';
-import {useEffect, useState} from "react";
+import {Button, message, Space, Table} from 'antd';
+import React, {useEffect, useState} from "react";
 import Search from "antd/lib/input/Search";
 import {GetStudentsRequest} from "../libs/Entity/request/GetStudentsRequest";
 import {studentAPI} from "../libs/API/StudentAPI";
@@ -8,6 +8,8 @@ import {formatDistance, subDays} from 'date-fns'
 import {useRouter} from "next/router";
 import {AddStudentRequest} from "../libs/Entity/request/AddStudentRequest";
 import {DeleteStudentRequest} from "../libs/Entity/request/DeleteStudentRequest";
+import {GetStudentRequest} from "../libs/Entity/request/GetStudentRequest";
+import ModalPad from '../components/ModelPad';
 
 // @ts-ignore
 async function fetchData(setStudentList, setTotal, currentPage, pageSize) {
@@ -25,50 +27,65 @@ export default function StudentList() {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [total, setTotal] = useState(1);
+    const [title, setTitle] = useState("");
+    const [studentData, setStudentData] = useState(null);
 
     const onCreate = async (values: any) => {
         debugger
         const {name, country, email, type} = values;
-        console.log(name, country, email, type)
+        // console.log(name, country, email, type)
 
         let addStudentRequest = new AddStudentRequest(name, country, email, type);
         const resp = await studentAPI.addStudent(addStudentRequest);
-        debugger
         const {code, data} = resp.data;
         if (code === 201) {
             //提示成功
-            message.success("添加学生数据成功！");
+            message.success("Successfully added！");
             setVisible(false);
             //3秒后跳转页面
+            debugger
             setTimeout(function () {
+                debugger
+                alert()
                 router.push("/StudentList")
             }, 3000)
         } else {
-            message.error("添加学生数据失败！");
+            message.error("Add failed ！");
         }
     };
 
     function showForm() {
         setVisible(true);
+        setTitle("Add student information");
+    }
+
+    async function updateStudent(id: number) {
+        showForm();
+        setTitle("Update student information");
+        let getStudentRequest = new GetStudentRequest(id);
+        const resp = await studentAPI.getStudent(getStudentRequest);
+        const {code, data} = resp.data;
+        setStudentData(data);
+        debugger
+        // console.log(data);
     }
 
     async function deleteStudent(id: number) {
         let deleteStudentRequest = new DeleteStudentRequest(id);
         const resp = await studentAPI.deleteStudent(deleteStudentRequest);
-        debugger
         const {code, data} = resp.data;
         if (code === 200) {
             //提示成功
-            message.success("删除学生数据成功！");
+            message.success("Successfully deleted！");
             setVisible(false);
             //3秒后跳转页面
             setTimeout(function () {
                 router.push("/StudentList")
             }, 3000)
         } else {
-            message.error("删除学生数据失败！");
+            message.error("Delete failed ！");
         }
-        console.log(id);
+        // console.log(id);
     }
 
     useEffect(() => {
@@ -115,26 +132,14 @@ export default function StudentList() {
 
         //页码或 pageSize 改变的回调，参数是改变后的页码及每页条数
         onChange(page: number, pageSize: number) {
-            // if(pageSize!=this.defaultPageSize){
-            //     setCurrentPage(this.defaultCurrent);
-            //     setPageSize(pageSize);
-            // }
-            setCurrentPage(page);
-            setPageSize(pageSize);
-            console.log("onChange")
-        },
-
-        //pageSize 变化的回调
-        onShowSizeChange(current: number, size: number) {
-            // if(size!=this.defaultPageSize){
-            setCurrentPage(this.defaultCurrent);
-            setPageSize(pageSize);
-            // }
-            // setCurrentPage(current);
-            // setPageSize(pageSize);
-
-            console.log("onShowSizeChange")
-        },
+            if (pageSize != this.defaultPageSize) {
+                setCurrentPage(this.defaultCurrent);
+                setPageSize(pageSize);
+            } else {
+                setCurrentPage(page);
+                setPageSize(pageSize);
+            }
+        }
     }
 
 
@@ -143,7 +148,9 @@ export default function StudentList() {
         <>
             <div className="search-div">
                 <Button type="primary" onClick={showForm}>+ Add</Button>
-                <CollectionCreateForm
+                <ModalPad
+                    title={title}
+                    studentData={studentData}
                     visible={visible}
                     onCreate={onCreate}
                     onCancel={() => {
@@ -179,9 +186,13 @@ export default function StudentList() {
                     key="action"
                     render={(text, record) => (
                         <Space size="middle">
-                            <a onClick={showForm}>Edit</a>
-                            <a onClick={()=>{
-                                deleteStudent(record.id)}
+                            <a onClick={() => {
+                                updateStudent(record.id)
+                            }
+                            }>Edit</a>
+                            <a onClick={() => {
+                                deleteStudent(record.id)
+                            }
                             }>Delete</a>
                         </Space>
                     )}
@@ -190,97 +201,3 @@ export default function StudentList() {
         </>
     )
 }
-
-// @ts-ignore
-const CollectionCreateForm = ({visible, onCreate, onCancel}) => {
-
-    const [form] = Form.useForm();
-    const {Option} = Select;
-
-    const formItemLayout = {
-        labelCol: {span: 6},
-        wrapperCol: {span: 14},
-    };
-
-    return (
-        <Modal
-            visible={visible}
-            title="Create a new collection"
-            okText="Create"
-            cancelText="Cancel"
-            onCancel={onCancel}
-            onOk={() => {
-                form
-                    .validateFields()
-                    .then(values => {
-                        form.resetFields();
-                        onCreate(values);
-                    })
-                    .catch(info => {
-                        console.log('Validate Failed:', info);
-                    });
-            }}
-        >
-            <Form
-                {...formItemLayout}
-                form={form}
-                name="form_in_modal"
-                initialValues={{modifier: 'public'}}
-            >
-                <Form.Item
-                    name="name"
-                    label="Name"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input student name',
-                        },
-                    ]}
-                >
-                    <Input placeholder="Please input student name"/>
-                </Form.Item>
-
-                <Form.Item
-                    name="email"
-                    label="Email"
-                    rules={[
-                        {
-                            required: true,
-                            type: 'email',
-                            message: 'Please input email address',
-                        },
-                    ]}
-                >
-                    <Input placeholder="Please input email address"/>
-                </Form.Item>
-
-                <Form.Item
-                    name="country"
-                    label="Area"
-                    hasFeedback
-                    rules={[{required: true, message: 'Please select your country!'}]}
-                >
-                    <Select placeholder="Please select an area">
-                        <Option value="China">China</Option>
-                        <Option value="New Zealand">New Zealand</Option>
-                        <Option value="Canada">Canada</Option>
-                        <Option value="Australia">Australia</Option>
-                    </Select>
-                </Form.Item>
-
-                <Form.Item
-                    name="type"
-                    label="Student Type"
-                    hasFeedback
-                    rules={[{required: true, message: 'Please select your country!'}]}
-                >
-                    <Select placeholder="Please select a student type">
-                        <Option value="1">Tester</Option>
-                        <Option value="2">Developer</Option>
-                    </Select>
-                </Form.Item>
-
-            </Form>
-        </Modal>
-    );
-};

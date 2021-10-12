@@ -25,7 +25,8 @@
 /*content*/
 
 .dashboard-content {
-    margin: 0 16px
+    margin: 0 16px;
+    height: 90vh;
 }
 
 /*header*/
@@ -41,7 +42,9 @@
 
 .dashboard-site-layout {
     padding: 24px;
-    minHeight: 360px
+    minHeight: 360px;
+    overflow:scroll;
+    height: 85vh;
 }
 
 .userinfo {
