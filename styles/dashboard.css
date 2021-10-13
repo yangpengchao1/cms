@@ -43,7 +43,7 @@
 .dashboard-site-layout {
     padding: 24px;
     minHeight: 360px;
-    overflow:scroll;
+    overflow: scroll;
     height: 85vh;
 }
 
@@ -95,20 +95,22 @@
     color: black;
     background-color: white;
     float: right;
-    top:45px;
+    top: 45px;
     right: 10px;
 }
 
 .logout-icon {
     color: black;
 }
-.site-layout{
+
+.site-layout {
     position: relative;
 }
+
 .site-layout, .icons-list {
     overflow: hidden;
 }
 
-.hide{
+.hide {
     display: none;
 }

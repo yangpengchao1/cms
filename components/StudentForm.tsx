@@ -3,7 +3,7 @@ import {PropsWithChildren} from "react";
 
 const StudentForm = (props: PropsWithChildren<any>) => {
 
-    const {studentData,form} = props;
+    const {studentData, form} = props;
 
     const {Option} = Select;
 

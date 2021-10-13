@@ -1,17 +1,17 @@
-.search-div{
+.search-div {
     margin-bottom: 20px;
     overflow: hidden;
 }
 
-.add-button{
+.add-button {
     float: left;
 }
 
-.search-input{
+.search-input {
     float: right;
     width: 500px;
 }
 
-.pagination{
+.pagination {
     float: right;
 }

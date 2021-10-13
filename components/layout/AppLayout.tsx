@@ -26,7 +26,7 @@ const {SubMenu} = Menu;
 
 export default function AppLayout(props: React.PropsWithChildren<any>) {
 
-    const { children } = props;
+    const {children} = props;
 
     const router = useRouter();
     const [collapsed, setCollapsed] = useState(false);

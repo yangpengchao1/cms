@@ -10,7 +10,6 @@ import {AddStudentRequest} from "../../../../libs/Entity/request/AddStudentReque
 import {DeleteStudentRequest} from "../../../../libs/Entity/request/DeleteStudentRequest";
 import {GetStudentRequest} from "../../../../libs/Entity/request/GetStudentRequest";
 import ModalPad from '../../../../components/ModelPad';
-import handler from "../../../api/hello";
 import AppLayout from "../../../../components/layout/AppLayout";
 
 // @ts-ignore

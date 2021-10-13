@@ -1,17 +1,17 @@
 .title {
-  font-size: 29px;
-  font-weight: 600;
-  text-align: center;
-  margin: 19px 0;
-  padding-bottom: 18px;
+    font-size: 29px;
+    font-weight: 600;
+    text-align: center;
+    margin: 19px 0;
+    padding-bottom: 18px;
 }
 
 .login-form {
-  width: 635px;
-  height: 256px;
-  margin: 0 auto;
+    width: 635px;
+    height: 256px;
+    margin: 0 auto;
 }
 
-html{
-  height: auto;
+html {
+    height: auto;
 }

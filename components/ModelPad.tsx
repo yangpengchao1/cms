@@ -4,7 +4,7 @@ import StudentForm from "./StudentForm";
 
 const ModalPad = (props: PropsWithChildren<any>) => {
 
-    const {title, visible, onCreate, onCancel,studentData} = props;
+    const {title, visible, onCreate, onCancel, studentData} = props;
     // console.log(studentData.name)
 
     const [form] = Form.useForm();
