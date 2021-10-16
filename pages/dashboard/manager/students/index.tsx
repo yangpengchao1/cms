@@ -3,123 +3,159 @@ import React, {useEffect, useState} from "react";
 import Search from "antd/lib/input/Search";
 import {GetStudentsRequest} from "../../../../libs/Entity/request/GetStudentsRequest";
 import {studentAPI} from "../../../../libs/API/StudentAPI";
-import {Column} from "rc-table";
 import {formatDistance, subDays} from 'date-fns'
-import {useRouter} from "next/router";
-import {AddStudentRequest} from "../../../../libs/Entity/request/AddStudentRequest";
 import {DeleteStudentRequest} from "../../../../libs/Entity/request/DeleteStudentRequest";
-import {GetStudentRequest} from "../../../../libs/Entity/request/GetStudentRequest";
-import ModalPad from '../../../../components/ModelPad';
+import ModalPad from '../../../../components/ModalPad';
 import AppLayout from "../../../../components/layout/AppLayout";
+import {Student} from "../../../../libs/Entity/Student";
+import StudentForm from "../../../../components/StudentForm";
 
 // @ts-ignore
-async function fetchData(setStudentList, setTotal, currentPage, pageSize) {
+async function fetchData(setStudentList, setTotal, currentPage, pageSize,setLoading) {
+    setLoading(true);
     let getStudentRequest = new GetStudentsRequest("", undefined, currentPage, pageSize);
     const resp = await studentAPI.getStudentList(getStudentRequest);
+    setLoading(false);
     await setStudentList(resp.data.data.students);
     await setTotal(resp.data.data.total);
 }
 
 export default function Students() {
 
-    const router = useRouter();
     const [studentList, setStudentList] = useState([]);
     const [visible, setVisible] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [total, setTotal] = useState(1);
     const [title, setTitle] = useState("");
-    const [studentData, setStudentData] = useState({});
+    // @ts-ignore
+    const [studentData, setStudentData] = useState(null);
+    const [addOrUpdate, setAddOrUpdate] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [refresh, setRefresh] = useState(false);
 
-    const onCreate = async (values: any) => {
-        debugger
-        const {name, country, email, type} = values;
-        // console.log(name, country, email, type)
+    useEffect(() => {
+        refresh && setTimeout(() => setRefresh(false))
+    }, [refresh])
 
-        let addStudentRequest = new AddStudentRequest(name, country, email, type);
-        const resp = await studentAPI.addStudent(addStudentRequest);
-        const {code, data} = resp.data;
-        if (code === 201) {
-            //提示成功
-            message.success("Successfully added！");
-            setVisible(false);
-            //3秒后跳转页面
-            debugger
-            setTimeout(function () {
-                debugger
-                alert()
-                router.push("/Index")
-            }, 3000)
-        } else {
-            message.error("Add failed ！");
-        }
-    };
+    const doRefresh = () => setRefresh(true);
 
-    function showForm() {
+    function showForm(operation: string) {
         setVisible(true);
-        setTitle("Add students information");
-    }
-
-    async function updateStudent(id: number) {
-        showForm();
-        setTitle("Update students information");
-        let getStudentRequest = new GetStudentRequest(id);
-        const resp = await studentAPI.getStudent(getStudentRequest);
-        const {code, data} = resp.data;
-        setStudentData(data);
-        debugger
-        // console.log(data);
+        setTitle(operation + " students information");
+        setAddOrUpdate(operation);
     }
 
     async function deleteStudent(id: number) {
+        setLoading(true);
         let deleteStudentRequest = new DeleteStudentRequest(id);
         const resp = await studentAPI.deleteStudent(deleteStudentRequest);
-        const {code, data} = resp.data;
+        setLoading(false);
+        const {code} = resp.data;
         if (code === 200) {
             //提示成功
             message.success("Successfully deleted！");
-            setVisible(false);
             //3秒后跳转页面
             setTimeout(function () {
-                router.push("/Index")
+                doRefresh();
             }, 3000)
         } else {
             message.error("Delete failed ！");
         }
-        // console.log(id);
     }
 
     useEffect(() => {
-        fetchData(setStudentList, setTotal, currentPage, pageSize);
-    }, [currentPage, pageSize]);
+        fetchData(setStudentList, setTotal, currentPage, pageSize,setLoading);
+    }, [currentPage, pageSize, refresh]);
 
-    const areaFilters = [
+    const columns = [
         {
-            text: 'China',
-            value: 'China',
+            title: 'No.',
+            render: (text, row, index) => index + 1,
         },
         {
-            text: 'New Zealand',
-            value: 'New Zealand',
-        },
-        {
-            text: 'Canada',
-            value: 'Canada',
-        },
-        {
-            text: 'Australia',
-            value: 'Australia',
-        },
-    ];
+            title: 'Name',
+            dataIndex: 'name',
+            render: text => <a>{text}</a>,
+            sorter: (pre: Student, next: Student) => {
+                const preCode = pre.name.charCodeAt(0);
+                const nextCode = next.name.charCodeAt(0);
 
-    const typeFilters = [
-        {
-            text: 'developer',
-            value: 'developer',
+                return preCode > nextCode ? 1 : preCode === nextCode ? 0 : -1;
+            },
         },
         {
-            text: 'tester',
-            value: 'tester',
+            title: 'Area',
+            dataIndex: 'country',
+            filters: [
+                {
+                    text: 'China',
+                    value: 'China',
+                },
+                {
+                    text: 'New Zealand',
+                    value: 'New Zealand',
+                },
+                {
+                    text: 'Canada',
+                    value: 'Canada',
+                },
+                {
+                    text: 'Australia',
+                    value: 'Australia',
+                },
+            ],
+            onFilter: (value, record) => record.country.indexOf(value) === 0,
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+        },
+        {
+            title: 'Selected Curriculum',
+            dataIndex: 'email',
+            render: (text, record, index) => (
+                record.courses?.map((item: { name: any; }) => item.name).join(',')
+            ),
+        },
+        {
+            title: 'Student Type',
+            render: (text, record: Student) => record.type.name,
+            filters: [
+                {
+                    text: 'tester',
+                    value: 'tester',
+                },
+                {
+                    text: 'developer',
+                    value: 'developer',
+                },
+            ],
+            onFilter: (value, record: Student) => record.type.name.indexOf(value) === 0,
+        },
+
+        {
+            title: 'Join Time',
+            render: (_, record: Student) => (
+                formatDistance(subDays(new Date(), 0), Date.parse(record.createdAt.toString()))
+            ),
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record: Student) => (
+                <Space size="middle">
+                    <a onClick={() => {
+                        setStudentData(record);
+                        showForm("Update");
+                    }
+                    }>Edit</a>
+                    <a onClick={() => {
+                        deleteStudent(record.id);
+                    }
+                    }>Delete</a>
+                </Space>
+            )
         },
     ];
 
@@ -143,62 +179,37 @@ export default function Students() {
         }
     }
 
+    function onChange(pagination, filters, sorter, extra) {
+        console.log('params', pagination, filters, sorter, extra);
+    }
+
 
     // @ts-ignore
     return (
         <AppLayout>
             <div className="search-div">
-                <Button type="primary" onClick={showForm}>+ Add</Button>
+                <Button type="primary"
+                        onClick={() => {
+                            setStudentData(null);
+                            showForm("Add");
+                        }}>+ Add</Button>
                 <ModalPad
                     title={title}
-                    studentData={studentData}
                     visible={visible}
-                    onCreate={onCreate}
+                    // onCreate={onCreate}
                     onCancel={() => {
                         setVisible(false);
                     }}
-                />
+                >
+                    <StudentForm studentData={studentData} setVisible={setVisible} addOrUpdate={addOrUpdate}
+                                 doRefresh={doRefresh} setLoading={setLoading}/>
+                </ModalPad>
                 <Search placeholder="input search text" className="search-input"/>
             </div>
-            <Table dataSource={studentList} pagination={pagination}>
-                <Column title="No." key="id"
-                        render={(text, record, index) => index + 1}/>
-                <Column title="Name" dataIndex="name" key="name" sorter={(a, b) => {
-                    a.name - b.name
-                }}/>
-                <Column title="Area" dataIndex="country" key="country" filters={areaFilters}/>
-                <Column title="Email" dataIndex="email" key="email"/>
-                <Column title="Selected Curriculum" key="courses"
-                        render={(text, record) => (
-                            record.courses?.map((item) => item.name).join(',')
-                        )}
-                />
-                <Column title="Student Type" key="type.id" filters={typeFilters}
-                        render={(text, record, index) => record.type.name}
-                />
 
-                <Column title="Join Time" key="createdAt"
-                        render={(text, record, index) =>
-                            formatDistance(subDays(new Date(), 0), Date.parse(record.createdAt))
-                        }
-                />
-                <Column
-                    title="Action"
-                    key="action"
-                    render={(text, record) => (
-                        <Space size="middle">
-                            <a onClick={() => {
-                                updateStudent(record.id)
-                            }
-                            }>Edit</a>
-                            <a onClick={() => {
-                                deleteStudent(record.id)
-                            }
-                            }>Delete</a>
-                        </Space>
-                    )}
-                />
-            </Table>
+            <Table loading={loading} columns={columns} dataSource={studentList} pagination={pagination} onChange={onChange}/>
+
         </AppLayout>
+
     )
 }

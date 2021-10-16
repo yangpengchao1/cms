@@ -39,4 +39,9 @@ export default class BaseAPI {
     protected createDelete(baseRequest: BaseRequest): Promise<AxiosResponse<BaseResponse<any>>> {
         return axios.delete(baseRequest.requestURL(), this.getHeaders(baseRequest.needToken()));
     }
+
+    protected createPut(baseRequest: BaseRequest): Promise<AxiosResponse<BaseResponse<any>>> {
+        const data = baseRequest.convertToJsonString();
+        return axios.put(baseRequest.requestURL(), data, this.getHeaders(baseRequest.needToken()));
+    }
 }

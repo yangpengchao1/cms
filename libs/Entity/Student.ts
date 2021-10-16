@@ -3,7 +3,7 @@ import {Type} from "./Type";
 
 export interface Student {
     country: string;
-    courses: Course;
+    courses: Course[];
     createdAt: Date;
     email: string;
     id: number;

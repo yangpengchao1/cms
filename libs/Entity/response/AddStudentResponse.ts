@@ -1,14 +1,4 @@
-import {Course} from "../Course";
-import {Type} from "../Type";
+import {GetStudentResponse} from "./GetStudentResponse";
 
-export interface LoginResponse {
-    country: string;
-    courses: Course[];
-    createdAt: string;
-    email: string;
-    id: number;
-    name: string;
-    profileId: string;
-    type: Type;
-    updatedAt: string;
+export interface AddStudentResponse extends GetStudentResponse{
 }
