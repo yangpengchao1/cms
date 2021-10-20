@@ -70,7 +70,7 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
             {/*Left*/}
             <Sider className="dashboard-slider" collapsible collapsed={collapsed} onCollapse={onCollapse}>
                 <div className="logo">CMS</div>
-                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                <Menu theme="dark" mode="inline">
                     <Menu.Item key="1" icon={<DashboardOutlined/>}>
                         <Link href="/dashboard/manager">
                             <a>Overview</a>

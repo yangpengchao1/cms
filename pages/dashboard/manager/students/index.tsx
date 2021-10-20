@@ -9,9 +9,10 @@ import ModalPad from '../../../../components/ModalPad';
 import AppLayout from "../../../../components/layout/AppLayout";
 import {Student} from "../../../../libs/Entity/Student";
 import StudentForm from "../../../../components/StudentForm";
+import Link from 'next/link';
 
 // @ts-ignore
-async function fetchData(setStudentList, setTotal, currentPage, pageSize,setLoading) {
+async function fetchData(setStudentList, setTotal, currentPage, pageSize, setLoading) {
     setLoading(true);
     let getStudentRequest = new GetStudentsRequest("", undefined, currentPage, pageSize);
     const resp = await studentAPI.getStudentList(getStudentRequest);
@@ -65,18 +66,20 @@ export default function Students() {
     }
 
     useEffect(() => {
-        fetchData(setStudentList, setTotal, currentPage, pageSize,setLoading);
+        fetchData(setStudentList, setTotal, currentPage, pageSize, setLoading);
     }, [currentPage, pageSize, refresh]);
 
     const columns = [
         {
             title: 'No.',
+            key: 'id',
             render: (text, row, index) => index + 1,
         },
         {
             title: 'Name',
+            key: 'name',
             dataIndex: 'name',
-            render: text => <a>{text}</a>,
+            render: (text, row, index) => <Link href={`/dashboard/manager/students/${row.id}`}>{row.name}</Link>,
             sorter: (pre: Student, next: Student) => {
                 const preCode = pre.name.charCodeAt(0);
                 const nextCode = next.name.charCodeAt(0);
@@ -86,6 +89,7 @@ export default function Students() {
         },
         {
             title: 'Area',
+            key: 'country',
             dataIndex: 'country',
             filters: [
                 {
@@ -109,17 +113,20 @@ export default function Students() {
         },
         {
             title: 'Email',
+            key: 'email',
             dataIndex: 'email',
         },
         {
             title: 'Selected Curriculum',
-            dataIndex: 'email',
+            key: 'courses',
+            dataIndex: 'courses',
             render: (text, record, index) => (
                 record.courses?.map((item: { name: any; }) => item.name).join(',')
             ),
         },
         {
             title: 'Student Type',
+            key: 'type',
             render: (text, record: Student) => record.type.name,
             filters: [
                 {
@@ -136,6 +143,7 @@ export default function Students() {
 
         {
             title: 'Join Time',
+            key: 'createdAt',
             render: (_, record: Student) => (
                 formatDistance(subDays(new Date(), 0), Date.parse(record.createdAt.toString()))
             ),
@@ -207,7 +215,8 @@ export default function Students() {
                 <Search placeholder="input search text" className="search-input"/>
             </div>
 
-            <Table loading={loading} columns={columns} dataSource={studentList} pagination={pagination} onChange={onChange}/>
+            <Table loading={loading} columns={columns} dataSource={studentList} pagination={pagination}
+                   onChange={onChange}/>
 
         </AppLayout>
 

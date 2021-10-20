@@ -1,0 +1,15 @@
+.content h3{
+    color: #664ee9;
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+.content{
+    margin-top: 30px;
+}
+
+.content b{
+    min-width: 150px;
+    margin-right: 50px;
+    /*使得内容左对齐展示*/
+    display: inline-block;
+}

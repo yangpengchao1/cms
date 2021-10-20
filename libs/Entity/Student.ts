@@ -11,4 +11,14 @@ export interface Student {
     profileId: number;
     type: Type;
     updatedAt: Date;
+    address: string;
+    age: number;
+    avatar: string;
+    description: string;
+    education: string;
+    gender: number;
+    interest: string[];
+    memberEndAt: Date;
+    memberStartAt: Date;
+    phone: string;
 }
