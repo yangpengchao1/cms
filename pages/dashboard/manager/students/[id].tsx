@@ -1,6 +1,6 @@
 import AppLayout from "../../../../components/layout/AppLayout";
 import {useRouter} from "next/router";
-import {useEffect, useState} from "react";
+import {PropsWithChildren, useEffect, useState} from "react";
 import {GetStudentRequest} from "../../../../libs/Entity/request/GetStudentRequest";
 import {studentAPI} from "../../../../libs/API/StudentAPI";
 import {Avatar, Card, Col, Row, Table, Tabs, Tag} from 'antd';
@@ -14,6 +14,7 @@ async function fetchData(id, setStudent) {
     console.log(resp.data.data.student)
 }
 
+//刷新的时候，服务器可以抓到id，从而进行数据抓取
 export async function getServerSideProps(context) {
     // todo get student profile here;
     const { id } = context.params;
@@ -23,7 +24,7 @@ export async function getServerSideProps(context) {
     };
 }
 
-export default function StudentDetails() {
+export default function StudentDetails(props:PropsWithChildren<any>) {
     const router = useRouter()
     const [studentData, setStudentData] = useState();
     const [courses, setCourses] = useState('tab1');
@@ -42,7 +43,7 @@ export default function StudentDetails() {
         {
             title: 'No.',
             key: 'id',
-            render: (text, row, index) => index + 1,
+            render: (text:any, row:any, index:number) => index + 1,
         },
         {
             title: 'Name',
@@ -52,7 +53,7 @@ export default function StudentDetails() {
         {
             title: 'Type',
             key: 'type',
-            render: (text, record, index) => (
+            render: (text:any, record:any) => (
                 record.type?.map((item: { name: any; }) => item.name).join(',')
             ),
         },
