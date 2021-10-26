@@ -20,6 +20,9 @@ import {useRouter} from "next/router";
 import {authAPI} from "../../libs/API/AuthAPI";
 import {LogoutRequest} from "../../libs/Entity/request/LogoutRequest";
 import Link from "next/link";
+import {routes} from "../../libs/constant/MenuConfig";
+import {LeftSideMenu} from "../../libs/Entity/LeftSideMenu";
+import {Role} from "../../libs/enum/Role";
 
 const {Header, Content, Sider} = Layout;
 const {SubMenu} = Menu;
@@ -31,6 +34,8 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
     const router = useRouter();
     const [collapsed, setCollapsed] = useState(false);
     const [showLogoutFlag, setShowLogoutFlag] = useState(false);
+
+    const leftSideMenus = renderMenus(routes.get(Role.MANAGER));
 
     function onCollapse(collapsedFlag: boolean) {
         setCollapsed(collapsedFlag);
@@ -71,47 +76,48 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
             <Sider className="dashboard-slider" collapsible collapsed={collapsed} onCollapse={onCollapse}>
                 <div className="logo">CMS</div>
                 <Menu theme="dark" mode="inline">
-                    <Menu.Item key="1" icon={<DashboardOutlined/>}>
-                        <Link href="/dashboard/manager">
-                            <a>Overview</a>
-                        </Link>
-                    </Menu.Item>
-                    <SubMenu key="sub1" icon={<SolutionOutlined/>} title="Student">
-                        <Menu.Item key="3" icon={<TeamOutlined/>}>
-                            <Link href="/dashboard/manager/students">
-                                <a>Student List</a>
-                            </Link>
-                        </Menu.Item>
-                    </SubMenu>
-                    <SubMenu key="sub2" icon={<DeploymentUnitOutlined/>} title="Teacher">
-                        <Menu.Item key="6" icon={<TeamOutlined/>}>
-                            <Link href="/dashboard/manager/teachers">
-                                <a>Teacher List</a>
-                            </Link>
-                        </Menu.Item>
-                    </SubMenu>
-                    <SubMenu key="sub3" icon={<ReadOutlined/>} title="Course">
-                        <Menu.Item key="7" icon={<ProjectOutlined/>}>
-                            <Link href="/dashboard/manager/courses">
-                                <a>All Courses</a>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="8" icon={<FileAddOutlined/>}>
-                            <Link href="/dashboard/manager/add-course">
-                                <a>Add Course</a>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="10" icon={<EditOutlined/>}>
-                            <Link href="/dashboard/manager/edit-course">
-                                <a>Edit Course</a>
-                            </Link>
-                        </Menu.Item>
-                    </SubMenu>
-                    <Menu.Item key="9" icon={<MessageOutlined/>}>
-                        <Link href="/dashboard/manager/message">
-                            <a>Message</a>
-                        </Link>
-                    </Menu.Item>
+                    {leftSideMenus}
+                    {/*<Menu.Item key="1" icon={<DashboardOutlined/>}>*/}
+                    {/*    <Link href="/dashboard/manager">*/}
+                    {/*        <a>Overview</a>*/}
+                    {/*    </Link>*/}
+                    {/*</Menu.Item>*/}
+                    {/*<SubMenu key="sub1" icon={<SolutionOutlined/>} title="Student">*/}
+                    {/*    <Menu.Item key="3" icon={<TeamOutlined/>}>*/}
+                    {/*        <Link href="/dashboard/manager/students">*/}
+                    {/*            <a>Student List</a>*/}
+                    {/*        </Link>*/}
+                    {/*    </Menu.Item>*/}
+                    {/*</SubMenu>*/}
+                    {/*<SubMenu key="sub2" icon={<DeploymentUnitOutlined/>} title="Teacher">*/}
+                    {/*    <Menu.Item key="6" icon={<TeamOutlined/>}>*/}
+                    {/*        <Link href="/dashboard/manager/teachers">*/}
+                    {/*            <a>Teacher List</a>*/}
+                    {/*        </Link>*/}
+                    {/*    </Menu.Item>*/}
+                    {/*</SubMenu>*/}
+                    {/*<SubMenu key="sub3" icon={<ReadOutlined/>} title="Course">*/}
+                    {/*    <Menu.Item key="7" icon={<ProjectOutlined/>}>*/}
+                    {/*        <Link href="/dashboard/manager/courses">*/}
+                    {/*            <a>All Courses</a>*/}
+                    {/*        </Link>*/}
+                    {/*    </Menu.Item>*/}
+                    {/*    <Menu.Item key="8" icon={<FileAddOutlined/>}>*/}
+                    {/*        <Link href="/dashboard/manager/add-course">*/}
+                    {/*            <a>Add Course</a>*/}
+                    {/*        </Link>*/}
+                    {/*    </Menu.Item>*/}
+                    {/*    <Menu.Item key="10" icon={<EditOutlined/>}>*/}
+                    {/*        <Link href="/dashboard/manager/edit-course">*/}
+                    {/*            <a>Edit Course</a>*/}
+                    {/*        </Link>*/}
+                    {/*    </Menu.Item>*/}
+                    {/*</SubMenu>*/}
+                    {/*<Menu.Item key="9" icon={<MessageOutlined/>}>*/}
+                    {/*    <Link href="/dashboard/manager/message">*/}
+                    {/*        <a>Message</a>*/}
+                    {/*    </Link>*/}
+                    {/*</Menu.Item>*/}
                 </Menu>
             </Sider>
 
@@ -151,4 +157,29 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
             </Layout>
         </Layout>
     );
+
+    function genKey(label:string,index:number){
+        return `${label}-${index}`;
+    }
+
+    function renderMenus(menus: LeftSideMenu[]): JSX.Element[] {
+        return menus.map((item:LeftSideMenu,index:number) => {
+            const key=genKey(item.label,index);
+            if (item.subMenu) {
+                return (
+                    <SubMenu key={key} icon={item.icon} title={item.label}>
+                        {renderMenus(item.subMenu)}
+                    </SubMenu>
+                )
+            } else {
+                return (
+                    <Menu.Item key={key} icon={item.icon}>
+                        <Link href={item.href}>
+                            <a>{item.label}</a>
+                        </Link>
+                    </Menu.Item>
+                )
+            }
+        });
+    }
 }
