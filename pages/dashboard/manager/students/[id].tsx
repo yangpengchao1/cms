@@ -5,62 +5,55 @@ import {GetStudentRequest} from "../../../../libs/Entity/request/GetStudentReque
 import {studentAPI} from "../../../../libs/API/StudentAPI";
 import {Avatar, Card, Col, Row, Table, Tabs, Tag} from 'antd';
 import {TabPane} from "rc-tabs";
-
-// @ts-ignore
-async function fetchData(id, setStudent) {
-    const getStudentRequest = new GetStudentRequest(id);
-    const resp = await studentAPI.getStudent(getStudentRequest);
-    setStudent(resp.data.data.student);
-    console.log(resp.data.data.student)
-}
+import {v4} from "uuid";
+import {Student} from "../../../../libs/Entity/Student";
 
 //刷新的时候，服务器可以抓到id，从而进行数据抓取
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: { params: { id: any; }; }) {
     // todo get student profile here;
-    const { id } = context.params;
+    const {id} = context.params;
 
     return {
-        props: { id },
+        props: {id},
     };
 }
 
-export default function StudentDetails(props:PropsWithChildren<any>) {
-    const router = useRouter()
-    const [studentData, setStudentData] = useState();
+export default function StudentDetails(props: PropsWithChildren<any>) {
+    const router = useRouter();
+    const [studentData, setStudentData] = useState<Student>();
     const [courses, setCourses] = useState('tab1');
 
     useEffect(async () => {
         const {id} = await router.query;
-        const getStudentRequest = await new GetStudentRequest(id);
+        const getStudentRequest = new GetStudentRequest(id);
         const resp = await studentAPI.getStudent(getStudentRequest);
-        await setStudentData(resp.data.data);
+        setStudentData(resp.data.data);
         console.log(resp.data.data)
-        console.log(resp.data.data.interest)
         await setCourses(resp.data.data.courses);
     }, []);
 
     const columns = [
         {
             title: 'No.',
-            key: 'id',
-            render: (text:any, row:any, index:number) => index + 1,
+            key: v4(),
+            render: (text: any, row: any, index: number) => index + 1,
         },
         {
             title: 'Name',
             dataIndex: 'name',
-            key: 'name',
+            key: v4(),
         },
         {
             title: 'Type',
-            key: 'type',
-            render: (text:any, record:any) => (
+            key: v4(),
+            render: (text: any, record: any) => (
                 record.type?.map((item: { name: any; }) => item.name).join(',')
             ),
         },
         {
             title: 'Join Time',
             dataIndex: 'createdAt',
-            key: 'createdAt',
+            key: v4(),
         }
     ];
 
@@ -92,7 +85,7 @@ export default function StudentDetails(props:PropsWithChildren<any>) {
                 <Col offset={1} span={15}>
                     <Card>
                         <Tabs defaultActiveKey="1">
-                            <TabPane tab="About" key="1">
+                            <TabPane tab="About" key={v4()}>
                                 <div className="content">
                                     <h3>Information</h3>
                                     <Row gutter={[50, 16]}>
@@ -121,7 +114,7 @@ export default function StudentDetails(props:PropsWithChildren<any>) {
                                     <Row gutter={[6, 16]}>
                                         <Col span={24}>
                                             {studentData?.interest.map((item) => (
-                                                <Tag color="magenta" key={item}>{item}</Tag>
+                                                <Tag color="magenta" key={v4()}>{item}</Tag>
                                             ))}
                                         </Col>
                                     </Row>
@@ -131,7 +124,7 @@ export default function StudentDetails(props:PropsWithChildren<any>) {
                                     {studentData?.description}
                                 </div>
                             </TabPane>
-                            <TabPane tab="Courses" key="2">
+                            <TabPane tab="Courses" key={v4()}>
                                 <Table dataSource={courses} columns={columns}/>
                             </TabPane>
                         </Tabs>

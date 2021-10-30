@@ -17,3 +17,27 @@
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
+
+//测试ts代码，例如去执行test文件夹中的test1.ts文件
+//执行： ts-node test1.ts
+//
+//{
+//  "compilerOptions": {
+//    "target": "es5",
+//    "lib": ["dom", "dom.iterable", "esnext"],
+//    "allowJs": true,
+//    "skipLibCheck": true,
+//    "strict": false,
+//    "forceConsistentCasingInFileNames": true,
+//    "noEmit": true,
+//    "esModuleInterop": true,
+//    "module": "commonjs",
+//    "moduleResolution": "node",
+//    "resolveJsonModule": true,
+//    "isolatedModules": true,
+//    "jsx": "preserve"
+//  },
+//  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+//  "exclude": ["node_modules"]
+//}
+

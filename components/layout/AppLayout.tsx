@@ -1,21 +1,6 @@
 import {Breadcrumb, Layout, Menu, message} from 'antd';
-import {
-    BellOutlined,
-    DashboardOutlined,
-    DeploymentUnitOutlined,
-    EditOutlined,
-    FileAddOutlined,
-    LogoutOutlined,
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    MessageOutlined,
-    ProjectOutlined,
-    ReadOutlined,
-    SolutionOutlined,
-    TeamOutlined,
-    UserOutlined,
-} from '@ant-design/icons';
-import {useState} from "react";
+import {BellOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined,} from '@ant-design/icons';
+import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import {authAPI} from "../../libs/API/AuthAPI";
 import {LogoutRequest} from "../../libs/Entity/request/LogoutRequest";
@@ -27,6 +12,103 @@ import {Role} from "../../libs/enum/Role";
 const {Header, Content, Sider} = Layout;
 const {SubMenu} = Menu;
 
+function showBreadcrumb(targetNode: LeftSideMenu, isDetail: boolean): JSX.Element {
+    return <Breadcrumb className="dashboard-breadcrumb">
+        <Breadcrumb.Item>CMS MANAGER SYSTEM</Breadcrumb.Item>
+        {targetNode.parentNodeLabel ? <Breadcrumb.Item>{targetNode.parentNodeLabel}</Breadcrumb.Item> : ""}
+        <Breadcrumb.Item>
+            {isDetail==true ? <a href={targetNode.href}>{targetNode.label}</a> : targetNode.label}
+        </Breadcrumb.Item>
+    </Breadcrumb>;
+}
+
+function switchMenuActive
+(route: string, menus: LeftSideMenu[]): { defaultOpenKeys: string; defaultSelectedKeys: string; breadcrumb: JSX.Element } {
+    //截取路径"/dashboard/manager/teachers"
+    const urlArr = route.split('/');
+    const target = urlArr[urlArr.length - 1];
+    const reg = /\[.*\]/;
+    const isDetail = reg.test(target);
+    // debugger
+
+    let targetNode: LeftSideMenu | null;
+
+    //    匹配路由
+    if (isDetail) {
+        //是详情页
+        targetNode = findLeftSideMenuNodeByName(urlArr[urlArr.length - 2], menus);
+    } else {
+        //不是详情页
+        targetNode = findLeftSideMenuNode(route, menus);
+    }
+
+    //    添加defaultSelectedKeys
+    let defaultSelectedKeys = "Overview-8";
+    let defaultOpenKeys = "Overview-8";
+    let breadcrumb: JSX.Element = <Breadcrumb className="dashboard-breadcrumb">
+        <Breadcrumb.Item>CMS MANAGER SYSTEM</Breadcrumb.Item>
+    </Breadcrumb>;
+    if (targetNode != null) {
+        defaultSelectedKeys = genKey(targetNode.label);
+        defaultOpenKeys = genKey(targetNode.parentNodeLabel);
+        breadcrumb = showBreadcrumb(targetNode, isDetail);
+    }
+
+    return {defaultSelectedKeys, defaultOpenKeys, breadcrumb}
+}
+
+let activedNode: LeftSideMenu | null = null;
+
+function findLeftSideMenuNode(route: string, menus: LeftSideMenu[]): LeftSideMenu | null {
+    menus.map((item: LeftSideMenu) => {
+        if (item.subMenu) {
+            findLeftSideMenuNode(route, item.subMenu);
+        }
+        if (item.href == route) {
+            activedNode = item;
+        }
+    })
+    return activedNode;
+}
+
+function findLeftSideMenuNodeByName(name: string, menus: LeftSideMenu[]): LeftSideMenu | null {
+    menus.map((item: LeftSideMenu) => {
+        if (item.subMenu) {
+            findLeftSideMenuNode(name, item.subMenu);
+        }
+        if (item.label == name) {
+            activedNode = item;
+        }
+    })
+    return activedNode;
+}
+
+function genKey(label: string) {
+    console.log(`${label}-${label.length}`)
+    return `${label}-${label.length}`;
+}
+
+function renderMenus(menus: LeftSideMenu[]): JSX.Element[] {
+    return menus.map((item: LeftSideMenu, index: number) => {
+        const key = genKey(item.label);
+        if (item.subMenu) {
+            return (
+                <SubMenu key={key} icon={item.icon} title={item.label}>
+                    {renderMenus(item.subMenu)}
+                </SubMenu>
+            )
+        } else {
+            return (
+                <Menu.Item key={key} icon={item.icon}>
+                    <Link href={item.href}>
+                        <a>{item.label}</a>
+                    </Link>
+                </Menu.Item>
+            )
+        }
+    });
+}
+
 export default function AppLayout(props: React.PropsWithChildren<any>) {
 
     const {children} = props;
@@ -34,8 +116,15 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
     const router = useRouter();
     const [collapsed, setCollapsed] = useState(false);
     const [showLogoutFlag, setShowLogoutFlag] = useState(false);
+    const routesMap = routes.get(Role.MANAGER);
+    const {defaultSelectedKeys, defaultOpenKeys, breadcrumb} = switchMenuActive(router.route, routesMap);
 
-    const leftSideMenus = renderMenus(routes.get(Role.MANAGER));
+    const leftSideMenus = renderMenus(routesMap);
+
+    useEffect(async () => {
+        switchMenuActive(router.route, routesMap);
+    }, []);
+
 
     function onCollapse(collapsedFlag: boolean) {
         setCollapsed(collapsedFlag);
@@ -75,49 +164,11 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
             {/*Left*/}
             <Sider className="dashboard-slider" collapsible collapsed={collapsed} onCollapse={onCollapse}>
                 <div className="logo">CMS</div>
-                <Menu theme="dark" mode="inline">
+                <Menu theme="dark" mode="inline"
+                      defaultSelectedKeys={defaultSelectedKeys}
+                    // defaultOpenKeys={defaultOpenKeys}
+                >
                     {leftSideMenus}
-                    {/*<Menu.Item key="1" icon={<DashboardOutlined/>}>*/}
-                    {/*    <Link href="/dashboard/manager">*/}
-                    {/*        <a>Overview</a>*/}
-                    {/*    </Link>*/}
-                    {/*</Menu.Item>*/}
-                    {/*<SubMenu key="sub1" icon={<SolutionOutlined/>} title="Student">*/}
-                    {/*    <Menu.Item key="3" icon={<TeamOutlined/>}>*/}
-                    {/*        <Link href="/dashboard/manager/students">*/}
-                    {/*            <a>Student List</a>*/}
-                    {/*        </Link>*/}
-                    {/*    </Menu.Item>*/}
-                    {/*</SubMenu>*/}
-                    {/*<SubMenu key="sub2" icon={<DeploymentUnitOutlined/>} title="Teacher">*/}
-                    {/*    <Menu.Item key="6" icon={<TeamOutlined/>}>*/}
-                    {/*        <Link href="/dashboard/manager/teachers">*/}
-                    {/*            <a>Teacher List</a>*/}
-                    {/*        </Link>*/}
-                    {/*    </Menu.Item>*/}
-                    {/*</SubMenu>*/}
-                    {/*<SubMenu key="sub3" icon={<ReadOutlined/>} title="Course">*/}
-                    {/*    <Menu.Item key="7" icon={<ProjectOutlined/>}>*/}
-                    {/*        <Link href="/dashboard/manager/courses">*/}
-                    {/*            <a>All Courses</a>*/}
-                    {/*        </Link>*/}
-                    {/*    </Menu.Item>*/}
-                    {/*    <Menu.Item key="8" icon={<FileAddOutlined/>}>*/}
-                    {/*        <Link href="/dashboard/manager/add-course">*/}
-                    {/*            <a>Add Course</a>*/}
-                    {/*        </Link>*/}
-                    {/*    </Menu.Item>*/}
-                    {/*    <Menu.Item key="10" icon={<EditOutlined/>}>*/}
-                    {/*        <Link href="/dashboard/manager/edit-course">*/}
-                    {/*            <a>Edit Course</a>*/}
-                    {/*        </Link>*/}
-                    {/*    </Menu.Item>*/}
-                    {/*</SubMenu>*/}
-                    {/*<Menu.Item key="9" icon={<MessageOutlined/>}>*/}
-                    {/*    <Link href="/dashboard/manager/message">*/}
-                    {/*        <a>Message</a>*/}
-                    {/*    </Link>*/}
-                    {/*</Menu.Item>*/}
                 </Menu>
             </Sider>
 
@@ -146,10 +197,10 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
                 </div>
 
                 <Content className="dashboard-content">
-                    <Breadcrumb className="dashboard-breadcrumb">
-
-                        <Breadcrumb.Item>CMS MANAGER SYSTEM</Breadcrumb.Item>
-                    </Breadcrumb>
+                    {/*<Breadcrumb className="dashboard-breadcrumb">*/}
+                    {/*<Breadcrumb.Item>CMS MANAGER SYSTEM</Breadcrumb.Item>*/}
+                    {breadcrumb}
+                    {/*</Breadcrumb>*/}
                     <div className="site-layout-background dashboard-site-layout">
                         {children}
                     </div>
@@ -158,28 +209,5 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
         </Layout>
     );
 
-    function genKey(label:string,index:number){
-        return `${label}-${index}`;
-    }
 
-    function renderMenus(menus: LeftSideMenu[]): JSX.Element[] {
-        return menus.map((item:LeftSideMenu,index:number) => {
-            const key=genKey(item.label,index);
-            if (item.subMenu) {
-                return (
-                    <SubMenu key={key} icon={item.icon} title={item.label}>
-                        {renderMenus(item.subMenu)}
-                    </SubMenu>
-                )
-            } else {
-                return (
-                    <Menu.Item key={key} icon={item.icon}>
-                        <Link href={item.href}>
-                            <a>{item.label}</a>
-                        </Link>
-                    </Menu.Item>
-                )
-            }
-        });
-    }
 }

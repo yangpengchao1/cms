@@ -13,17 +13,20 @@ const overviewFunctions: LeftSideMenu = {
     href: "/dashboard/manager",
     label: "Overview",
     icon: <DashboardOutlined/>,
+    parentNodeLabel:"",
 }
 
 const studentFunctions: LeftSideMenu = {
     href: "",
     label: "Student",
     icon: <SolutionOutlined/>,
+    parentNodeLabel:"",
     subMenu: [
         {
             href: "/dashboard/manager/students",
             label: "Student List",
             icon: <TeamOutlined/>,
+            parentNodeLabel:"Student",
         }
     ]
 }
@@ -32,11 +35,13 @@ const teacherFunctions: LeftSideMenu = {
     href: "teachers",
     label: "Teacher",
     icon: <DeploymentUnitOutlined/>,
+    parentNodeLabel:"",
     subMenu: [
         {
             href: "/dashboard/manager/teachers",
             label: "Teacher List",
             icon: <TeamOutlined/>,
+            parentNodeLabel:"Teacher",
         }
     ]
 }
@@ -45,21 +50,25 @@ const courseFunctions: LeftSideMenu = {
     href: "courses",
     label: "Course",
     icon: <ReadOutlined/>,
+    parentNodeLabel:"",
     subMenu: [
         {
             href: "/dashboard/manager/courses",
             label: "All Courses",
             icon: <ProjectOutlined/>,
+            parentNodeLabel:"Course",
         },
         {
             href: "/dashboard/manager/add-course",
             label: "Add Course",
             icon: <FileAddOutlined/>,
+            parentNodeLabel:"Course",
         },
         {
             href: "/dashboard/manager/edit-course",
             label: "Edit Course",
             icon: <EditOutlined/>,
+            parentNodeLabel:"Course",
         },
     ]
 }
@@ -68,6 +77,7 @@ const messageFunctions: LeftSideMenu = {
     href: "/dashboard/manager/message",
     label: "Message",
     icon: <MessageOutlined/>,
+    parentNodeLabel:"",
 }
 
 export const routes: Map<Role, LeftSideMenu[]> = new Map([

@@ -10,6 +10,7 @@ import AppLayout from "../../../../components/layout/AppLayout";
 import {Student} from "../../../../libs/Entity/Student";
 import StudentForm from "../../../../components/StudentForm";
 import Link from 'next/link';
+import { v4 } from "uuid";
 
 // @ts-ignore
 async function fetchData(setStudentList, setTotal, currentPage, pageSize, setLoading) {
@@ -69,15 +70,17 @@ export default function Students() {
         fetchData(setStudentList, setTotal, currentPage, pageSize, setLoading);
     }, [currentPage, pageSize, refresh]);
 
+
+
     const columns = [
         {
             title: 'No.',
-            key: 'id',
+            key: v4(),
             render: (text, row, index) => index + 1,
         },
         {
             title: 'Name',
-            key: 'name',
+            key: v4(),
             dataIndex: 'name',
             render: (text, row, index) => <Link href={`/dashboard/manager/students/${row.id}`}>{row.name}</Link>,
             sorter: (pre: Student, next: Student) => {
@@ -89,7 +92,7 @@ export default function Students() {
         },
         {
             title: 'Area',
-            key: 'country',
+            key: v4(),
             dataIndex: 'country',
             filters: [
                 {
@@ -113,12 +116,12 @@ export default function Students() {
         },
         {
             title: 'Email',
-            key: 'email',
+            key: v4(),
             dataIndex: 'email',
         },
         {
             title: 'Selected Curriculum',
-            key: 'courses',
+            key: v4(),
             dataIndex: 'courses',
             render: (text, record, index) => (
                 record.courses?.map((item: { name: any; }) => item.name).join(',')
@@ -126,7 +129,7 @@ export default function Students() {
         },
         {
             title: 'Student Type',
-            key: 'type',
+            key: v4(),
             render: (text, record: Student) => record.type.name,
             filters: [
                 {
@@ -143,14 +146,14 @@ export default function Students() {
 
         {
             title: 'Join Time',
-            key: 'createdAt',
+            key: v4(),
             render: (_, record: Student) => (
                 formatDistance(subDays(new Date(), 0), Date.parse(record.createdAt.toString()))
             ),
         },
         {
             title: 'Action',
-            key: 'action',
+            key: v4(),
             render: (_, record: Student) => (
                 <Space size="middle">
                     <a onClick={() => {
@@ -191,8 +194,6 @@ export default function Students() {
         console.log('params', pagination, filters, sorter, extra);
     }
 
-
-    // @ts-ignore
     return (
         <AppLayout>
             <div className="search-div">
