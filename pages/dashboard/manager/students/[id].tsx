@@ -5,8 +5,12 @@ import {GetStudentRequest} from "../../../../libs/Entity/request/GetStudentReque
 import {studentAPI} from "../../../../libs/API/StudentAPI";
 import {Avatar, Card, Col, Row, Table, Tabs, Tag} from 'antd';
 import {TabPane} from "rc-tabs";
+// @ts-ignore
 import {v4} from "uuid";
 import {Student} from "../../../../libs/Entity/Student";
+import {AxiosResponse} from "axios";
+import {BaseResponse} from "../../../../libs/Entity/response/BaseResponse";
+import {Course} from "../../../../libs/Entity/Course";
 
 //刷新的时候，服务器可以抓到id，从而进行数据抓取
 export async function getServerSideProps(context: { params: { id: any; }; }) {
@@ -21,15 +25,16 @@ export async function getServerSideProps(context: { params: { id: any; }; }) {
 export default function StudentDetails(props: PropsWithChildren<any>) {
     const router = useRouter();
     const [studentData, setStudentData] = useState<Student>();
-    const [courses, setCourses] = useState('tab1');
+    const [courses, setCourses] = useState<Course[]>();
 
-    useEffect(async () => {
-        const {id} = await router.query;
-        const getStudentRequest = new GetStudentRequest(id);
-        const resp = await studentAPI.getStudent(getStudentRequest);
-        setStudentData(resp.data.data);
-        console.log(resp.data.data)
-        await setCourses(resp.data.data.courses);
+    useEffect(() => {
+        (async () => {
+            const {id} = router.query;
+            const getStudentRequest = new GetStudentRequest(id);
+            const resp: AxiosResponse<BaseResponse<Student>> = await studentAPI.getStudent(getStudentRequest);
+            setStudentData(resp.data.data);
+            setCourses(resp.data.data.courses);
+        })();
     }, []);
 
     const columns = [
@@ -91,7 +96,7 @@ export default function StudentDetails(props: PropsWithChildren<any>) {
                                     <Row gutter={[50, 16]}>
                                         <Col span={24}>
                                             <b>Birthday:</b>
-                                            <span>{studentData?.birthday}</span>
+                                            <span>{studentData?.memberStartAt}</span>
                                         </Col>
                                         <Col span={24}>
                                             <b>Gender:</b>

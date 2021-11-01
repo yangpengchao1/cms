@@ -23,7 +23,7 @@ function showBreadcrumb(targetNode: LeftSideMenu, isDetail: boolean): JSX.Elemen
 }
 
 function switchMenuActive
-(route: string, menus: LeftSideMenu[]): { defaultOpenKeys: string; defaultSelectedKeys: string; breadcrumb: JSX.Element } {
+(route: string, menus: LeftSideMenu[] | undefined): { defaultOpenKeys: string[]; defaultSelectedKeys: string[]; breadcrumb: JSX.Element } {
     //截取路径"/dashboard/manager/teachers"
     const urlArr = route.split('/');
     const target = urlArr[urlArr.length - 1];
@@ -43,23 +43,24 @@ function switchMenuActive
     }
 
     //    添加defaultSelectedKeys
-    let defaultSelectedKeys = "Overview-8";
-    let defaultOpenKeys = "Overview-8";
-    let breadcrumb: JSX.Element = <Breadcrumb className="dashboard-breadcrumb">
-        <Breadcrumb.Item>CMS MANAGER SYSTEM</Breadcrumb.Item>
-    </Breadcrumb>;
+    //设置默认选择
+    let defaultSelectedKeys = [genKey("Overview")];
+    let defaultOpenKeys = [genKey("Overview")];
+    let breadcrumb: JSX.Element;
     if (targetNode != null) {
-        defaultSelectedKeys = genKey(targetNode.label);
-        defaultOpenKeys = genKey(targetNode.parentNodeLabel);
+        defaultSelectedKeys = [genKey(targetNode.label)];
+        defaultOpenKeys = [genKey(targetNode.parentNodeLabel)];
         breadcrumb = showBreadcrumb(targetNode, isDetail);
     }
 
+    // @ts-ignore
     return {defaultSelectedKeys, defaultOpenKeys, breadcrumb}
 }
 
 let activedNode: LeftSideMenu | null = null;
 
-function findLeftSideMenuNode(route: string, menus: LeftSideMenu[]): LeftSideMenu | null {
+function findLeftSideMenuNode(route: string, menus: LeftSideMenu[] | undefined): LeftSideMenu | null {
+    // @ts-ignore
     menus.map((item: LeftSideMenu) => {
         if (item.subMenu) {
             findLeftSideMenuNode(route, item.subMenu);
@@ -71,7 +72,8 @@ function findLeftSideMenuNode(route: string, menus: LeftSideMenu[]): LeftSideMen
     return activedNode;
 }
 
-function findLeftSideMenuNodeByName(name: string, menus: LeftSideMenu[]): LeftSideMenu | null {
+function findLeftSideMenuNodeByName(name: string, menus: LeftSideMenu[] | undefined): LeftSideMenu | null {
+    // @ts-ignore
     menus.map((item: LeftSideMenu) => {
         if (item.subMenu) {
             findLeftSideMenuNode(name, item.subMenu);
@@ -84,12 +86,12 @@ function findLeftSideMenuNodeByName(name: string, menus: LeftSideMenu[]): LeftSi
 }
 
 function genKey(label: string) {
-    console.log(`${label}-${label.length}`)
     return `${label}-${label.length}`;
 }
 
-function renderMenus(menus: LeftSideMenu[]): JSX.Element[] {
-    return menus.map((item: LeftSideMenu, index: number) => {
+function renderMenus(menus: LeftSideMenu[] | undefined): JSX.Element[] {
+    // @ts-ignore
+    return menus.map((item: LeftSideMenu) => {
         const key = genKey(item.label);
         if (item.subMenu) {
             return (
@@ -121,9 +123,9 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
 
     const leftSideMenus = renderMenus(routesMap);
 
-    useEffect(async () => {
-        switchMenuActive(router.route, routesMap);
-    }, []);
+    // useEffect(async () => {
+    //     switchMenuActive(router.route, routesMap);
+    // }, []);
 
 
     function onCollapse(collapsedFlag: boolean) {
@@ -166,7 +168,7 @@ export default function AppLayout(props: React.PropsWithChildren<any>) {
                 <div className="logo">CMS</div>
                 <Menu theme="dark" mode="inline"
                       defaultSelectedKeys={defaultSelectedKeys}
-                    // defaultOpenKeys={defaultOpenKeys}
+                    defaultOpenKeys={defaultOpenKeys}
                 >
                     {leftSideMenus}
                 </Menu>

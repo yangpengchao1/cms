@@ -9,4 +9,17 @@ export interface Course {
     createdAt:Date;
     updatedAt:Date;
     type:Type[];
+    cover:string;
+    detail:string;
+    duration:number;
+    durationUnit:number;
+    maxStudents:number;
+    price:string;
+    uid:string;
+    star:number;
+    startTime:Date;
+    status:number;
+    scheduleId:number;
+    teacherId:number;
+    teacherName:string;
 }

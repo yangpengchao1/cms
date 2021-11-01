@@ -4,12 +4,12 @@ import {AxiosResponse} from "axios";
 import {GetStudentsRequest} from "../Entity/request/GetStudentsRequest";
 import {GetStudentsResponse} from "../Entity/response/GetStudentsResponse";
 import {AddStudentRequest} from "../Entity/request/AddStudentRequest";
-import {AddStudentResponse, LoginResponse} from "../Entity/response/AddStudentResponse";
+import {AddStudentResponse} from "../Entity/response/AddStudentResponse";
 import {DeleteStudentRequest} from "../Entity/request/DeleteStudentRequest";
 import {GetStudentRequest} from "../Entity/request/GetStudentRequest";
-import {GetStudentResponse} from "../Entity/response/GetStudentResponse";
 import {UpdateStudentRequest} from "../Entity/request/UpdateStudentRequest";
 import {UpdateStudentResponse} from "../Entity/response/UpdateStudentResponse";
+import {Student} from "../Entity/Student";
 
 class StudentAPI extends BaseAPI {
     public getStudentList(req: GetStudentsRequest): Promise<AxiosResponse<BaseResponse<GetStudentsResponse>>> {
@@ -24,7 +24,7 @@ class StudentAPI extends BaseAPI {
         return this.createDelete(req);
     }
 
-    public getStudent(req: GetStudentRequest): Promise<AxiosResponse<BaseResponse<GetStudentResponse>>> {
+    public getStudent(req: GetStudentRequest): Promise<AxiosResponse<BaseResponse<Student>>> {
         return this.createGet(req);
     }
 

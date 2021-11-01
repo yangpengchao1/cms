@@ -10,6 +10,7 @@ import AppLayout from "../../../../components/layout/AppLayout";
 import {Student} from "../../../../libs/Entity/Student";
 import StudentForm from "../../../../components/StudentForm";
 import Link from 'next/link';
+// @ts-ignore
 import { v4 } from "uuid";
 
 // @ts-ignore
@@ -76,13 +77,13 @@ export default function Students() {
         {
             title: 'No.',
             key: v4(),
-            render: (text, row, index) => index + 1,
+            render: (_: any, _1: any, index: number) => index + 1,
         },
         {
             title: 'Name',
             key: v4(),
             dataIndex: 'name',
-            render: (text, row, index) => <Link href={`/dashboard/manager/students/${row.id}`}>{row.name}</Link>,
+            render: (text: any, row: any) => <Link href={`/dashboard/manager/students/${row.id}`}>{row.name}</Link>,
             sorter: (pre: Student, next: Student) => {
                 const preCode = pre.name.charCodeAt(0);
                 const nextCode = next.name.charCodeAt(0);
@@ -112,7 +113,7 @@ export default function Students() {
                     value: 'Australia',
                 },
             ],
-            onFilter: (value, record) => record.country.indexOf(value) === 0,
+            onFilter: (value: any, record: { country: string | any[]; }) => record.country.indexOf(value) === 0,
         },
         {
             title: 'Email',
@@ -123,14 +124,14 @@ export default function Students() {
             title: 'Selected Curriculum',
             key: v4(),
             dataIndex: 'courses',
-            render: (text, record, index) => (
+            render: (text: any, record: { courses: { name: any; }[]; }) => (
                 record.courses?.map((item: { name: any; }) => item.name).join(',')
             ),
         },
         {
             title: 'Student Type',
             key: v4(),
-            render: (text, record: Student) => record.type.name,
+            render: (text: any, record: Student) => record.type.name,
             filters: [
                 {
                     text: 'tester',
@@ -141,22 +142,23 @@ export default function Students() {
                     value: 'developer',
                 },
             ],
-            onFilter: (value, record: Student) => record.type.name.indexOf(value) === 0,
+            onFilter: (value: string, record: Student) => record.type.name.indexOf(value) === 0,
         },
 
         {
             title: 'Join Time',
             key: v4(),
-            render: (_, record: Student) => (
+            render: (_: any, record: Student) => (
                 formatDistance(subDays(new Date(), 0), Date.parse(record.createdAt.toString()))
             ),
         },
         {
             title: 'Action',
             key: v4(),
-            render: (_, record: Student) => (
+            render: (_: any, record: Student) => (
                 <Space size="middle">
                     <a onClick={() => {
+                        // @ts-ignore
                         setStudentData(record);
                         showForm("Update");
                     }
@@ -190,7 +192,7 @@ export default function Students() {
         }
     }
 
-    function onChange(pagination, filters, sorter, extra) {
+    function onChange(pagination: any, filters: any, sorter: any, extra: any) {
         console.log('params', pagination, filters, sorter, extra);
     }
 

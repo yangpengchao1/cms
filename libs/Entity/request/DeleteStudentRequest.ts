@@ -4,7 +4,7 @@ import {RequestURL} from "../../enum/RequestURL";
 
 export class DeleteStudentRequest extends BaseRequest {
 
-    private "_id": number;
+    private "_id": string | string[] | undefined;
 
     convertToJsonString(): string {
         return JSON.stringify({});
@@ -18,17 +18,16 @@ export class DeleteStudentRequest extends BaseRequest {
         return API_HOST + RequestURL.STUDENT_LIST + `/` + this.id;
     }
 
-    constructor(id: number) {
+    constructor(id: string | string[] | undefined) {
         super();
         this._id = id;
     }
 
-    get id(): number {
+    get id(): string | string[] | undefined {
         return this._id;
     }
 
-    set id(value: number) {
+    set id(value: string | string[] | undefined) {
         this._id = value;
     }
-
 }

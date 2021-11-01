@@ -41,7 +41,7 @@
 }
 
 .dashboard-site-layout {
-    padding: 24px;
+    padding: 16px 12px;
     minHeight: 360px;
     overflow: scroll;
     height: 85vh;
