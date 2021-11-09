@@ -3,4 +3,5 @@ export enum RequestURL {
     LOGOUT = "/api/logout",
     STUDENT_LIST = "/api/students",
     COURSE_LIST = "/api/courses",
+    COURSE_DETAIL = "/api/courses/detail",
 }

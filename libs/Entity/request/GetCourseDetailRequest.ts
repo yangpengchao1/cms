@@ -2,12 +2,12 @@ import {BaseRequest} from "./BaseRequest";
 import {API_HOST} from "../../constant/Config";
 import {RequestURL} from "../../enum/RequestURL";
 
-export class DeleteStudentRequest extends BaseRequest {
+export class GetCourseDetailRequest extends BaseRequest {
 
-    private "_id": number;
+    private _id: number;
 
     convertToJsonString(): string {
-        return JSON.stringify({});
+        return "";
     }
 
     needToken(): boolean {
@@ -15,8 +15,9 @@ export class DeleteStudentRequest extends BaseRequest {
     }
 
     requestURL(): string {
-        return API_HOST + RequestURL.STUDENT_LIST + `/` + this.id;
+        return API_HOST + RequestURL.COURSE_DETAIL+`?id=`+this.id;
     }
+
 
     constructor(id: number) {
         super();

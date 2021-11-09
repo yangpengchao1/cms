@@ -1,4 +1,6 @@
 import {Type} from "./Type";
+import {Schedule} from "./Schedule";
+import {Sale} from "./Sale";
 
 export interface Course {
     id: number;
@@ -22,4 +24,6 @@ export interface Course {
     scheduleId:number;
     teacherId:number;
     teacherName:string;
+    schedule:Schedule;
+    sales:Sale;
 }

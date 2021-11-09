@@ -4,6 +4,7 @@ import '../styles/dashboard.css'
 import '../styles/studentList.css'
 import '../styles/modal.css'
 import '../styles/details.css'
+import '../styles/courses.css'
 
 import type {AppProps} from 'next/app'
 

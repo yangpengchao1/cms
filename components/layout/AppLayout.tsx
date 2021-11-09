@@ -29,7 +29,6 @@ function switchMenuActive
     const target = urlArr[urlArr.length - 1];
     const reg = /\[.*\]/;
     const isDetail = reg.test(target);
-    // debugger
 
     let targetNode: LeftSideMenu | null;
 

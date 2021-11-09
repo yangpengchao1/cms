@@ -1,5 +1,5 @@
 import AppLayout from "../../../../components/layout/AppLayout";
-import {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {BackTop, Button, Card, Col, Divider, List, Row, Skeleton} from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {AxiosResponse} from "axios";
@@ -9,6 +9,7 @@ import {GetCoursesRequest} from "../../../../libs/Entity/request/GetCoursesReque
 import {Course} from "../../../../libs/Entity/Course";
 import {GetCoursesResponse} from "../../../../libs/Entity/response/GetCoursesResponse";
 import {HeartFilled, UserOutlined} from "@ant-design/icons";
+import Link from "next/link";
 
 export default function Courses() {
     const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ export default function Courses() {
         setData([...data, ...resp.data.data.courses]);
         setTotal(resp.data.data.total);
         setLoading(false);
-    }, [data, loading, page]);
+    }, [page]);
 
     useEffect(() => {
         (async () => {
@@ -42,7 +43,7 @@ export default function Courses() {
             <div
                 id="scrollableDiv"
                 style={{
-                    height: "auto",
+                    height: "100vh",
                     overflow: "auto",
                     padding: "0",
                     border: "1px solid rgba(140, 140, 140, 0.35)",
@@ -69,31 +70,43 @@ export default function Courses() {
                                         <h3>{item.name}</h3>
                                     </Row>
 
-                                    <Row gutter={[16, 16]} style={{}}>
-                                        <Col span={12}>{item.createdAt}</Col>
-                                        <Col span={12}>
-                                            <div style={{float: "right"}}>
-                                                <HeartFilled
-                                                    style={{marginRight: 5, fontSize: 16, color: "red"}}
-                                                />
-                                                {item.star}
-                                            </div>
+                                    <Row gutter={[16, 16]}>
+                                        <Col span={24}>
+                                            <Row className="content-line">
+                                                <Col span={12}>{item.createdAt}</Col>
+                                                <Col span={12}>
+                                                    <div style={{float: "right"}}>
+                                                        <HeartFilled
+                                                            style={{marginRight: 5, fontSize: 16, color: "red"}}
+                                                        />
+                                                        {item.star}
+                                                    </div>
+                                                </Col>
+                                            </Row>
                                         </Col>
 
-                                        <Col span={12}>Duration:</Col>
-                                        <Col span={12}>
-                                            <div style={{float: "right"}}>
-                                                <b>{item.duration} years</b>
-                                            </div>
+                                        <Col span={24}>
+                                            <Row className="content-line">
+                                                <Col span={12}>Duration:</Col>
+                                                <Col span={12}>
+                                                    <div style={{float: "right"}}>
+                                                        <b>{item.duration} years</b>
+                                                    </div>
+                                                </Col>
+                                            </Row>
                                         </Col>
 
-                                        <Col span={12}>Teacher:</Col>
-                                        <Col span={12}>
-                                            <div style={{float: "right"}}>
-                                                <a>
-                                                    <b>{item.teacherName}</b>
-                                                </a>
-                                            </div>
+                                        <Col span={24}>
+                                            <Row className="content-line">
+                                                <Col span={12}>Teacher:</Col>
+                                                <Col span={12}>
+                                                    <div style={{float: "right"}}>
+                                                        <a>
+                                                            <b>{item.teacherName}</b>
+                                                        </a>
+                                                    </div>
+                                                </Col>
+                                            </Row>
                                         </Col>
 
                                         <Col span={12}>
@@ -112,7 +125,7 @@ export default function Courses() {
                                             </div>
                                         </Col>
                                         <Col span={24}>
-                                            <Button type="primary">Read More</Button>
+                                            <Button type="primary"><Link href={`/dashboard/manager/courses/${item.id}`}>Read More</Link></Button>
                                         </Col>
                                     </Row>
                                 </Card>
@@ -122,7 +135,7 @@ export default function Courses() {
                 </InfiniteScroll>
 
                 <BackTop
-                    visibilityHeight={20}
+                    visibilityHeight={100}
                     target={() => document.getElementById("scrollableDiv")}>
                     <div
                         style={{

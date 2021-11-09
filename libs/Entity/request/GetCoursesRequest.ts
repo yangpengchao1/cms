@@ -71,7 +71,7 @@ export class GetCoursesRequest extends BaseRequest {
     }
 
     get type(): string {
-        return this._type;
+        return <string>this._type;
     }
 
     set type(value: string) {
