@@ -25,10 +25,11 @@ export async function getServerSideProps(context: { params: { id: any; }; }) {
 }
 
 
-export default function courseDetail(props: PropsWithChildren<any>) {
+export default function CourseDetail(props: PropsWithChildren<any>) {
     const router = useRouter();
     const [courseData, setCourseData] = useState<Course>();
-    let classTimeMap = new Map();
+    const [classTimeMap, setClassTimeMap] = useState<Map<string,string>>();
+    // let classTimeMap = new Map();
 
     useEffect(() => {
         (async () => {
@@ -45,11 +46,26 @@ export default function courseDetail(props: PropsWithChildren<any>) {
             const content = item.split(" ");
             // console.log(content)
             // @ts-ignore
-            classTimeMap.set(content[0], content[1]);
+            // debugger
+            // classTimeMap.set(content[0], content[1]);
+
+            setClassTimeMap(new Map([content[0],content[1]]));
         })
+        // debugger
         console.log(classTimeMap)
-        console.log(classTimeMap.get("Friday"))
+        // console.log(classTimeMap.get("Friday"))
     }
+
+    const data = [
+        {
+            key: '1',
+            firstName: 'John',
+            lastName: 'Brown',
+            age: 32,
+            address: 'New York No. 1 Lake Park',
+            tags: ['nice', 'developer'],
+        }
+    ];
 
     return (
         <AppLayout>
@@ -140,8 +156,8 @@ export default function courseDetail(props: PropsWithChildren<any>) {
                         <h1>Course Code</h1>
                         <p>{courseData?.uid}</p>
                         <h1>Class Time</h1>
-                        <Table>
-                            <Column title="Sunday" key="Sunday" render={() => classTimeMap?.get("Sunday")}/>
+                        <Table dataSource={data}>
+                            <Column title="Sunday" key="Sunday" render={(_,_1,_2) => 11}/>
                             <Column title="Monday" key="Monday" render={() => classTimeMap?.get("Monday")}/>
                             <Column title="Tuesday" key="Tuesday" render={() => classTimeMap?.get("Tuesday")}/>
                             <Column title="Wednesday" key="Wednesday" render={() => classTimeMap?.get("Wednesday")}/>
