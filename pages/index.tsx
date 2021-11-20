@@ -6,28 +6,11 @@ import {authAPI} from "../libs/API/AuthAPI";
 import {LoginRequest} from "../libs/Entity/request/LoginRequest";
 
 export default function Login() {
-    const router = useRouter();
-    const value1 = "student";
-    const onChange1 = (e: RadioChangeEvent) => {
-        // console.log("radio1 checked", e.target.value);
-
-        // setState({
-        //   value1: e.target.value,
-        // });
-    };
-
     const [role, setRole] = useState("student");
 
-    const changeStudent = () => {
-        setRole("student");
-    };
-
-    const changeTeacher = () => {
-        setRole("teachers");
-    };
-
-    const changeManager = () => {
-        setRole("manager");
+    const router = useRouter();
+    const onChange = (e: RadioChangeEvent) => {
+        setRole(e.target.value);
     };
 
     const login = async (values: any) => {
@@ -39,7 +22,7 @@ export default function Login() {
         if (code === 201) {
             //存储信息
             localStorage.setItem("token", data.token);
-            localStorage.setItem("userId", data.userId.toString());
+            localStorage.setItem("userId", data.userId);
             localStorage.setItem("role", data.role);
             //跳转页面
             await router.push("/dashboard");
@@ -54,16 +37,10 @@ export default function Login() {
             <div className="login-form">
                 <Form onFinish={login}>
                     <Form.Item name="role" initialValue={role}>
-                        <Radio.Group onChange={onChange1} value={value1}>
-                            <Radio.Button value="student" onClick={changeStudent}>
-                                Student
-                            </Radio.Button>
-                            <Radio.Button value="teacher" onClick={changeTeacher}>
-                                Teacher
-                            </Radio.Button>
-                            <Radio.Button value="manager" onClick={changeManager}>
-                                Manager
-                            </Radio.Button>
+                        <Radio.Group onChange={onChange} value={role}>
+                            <Radio.Button value="student">Student</Radio.Button>
+                            <Radio.Button value="teacher">Teacher</Radio.Button>
+                            <Radio.Button value="manager">Manager</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
 
@@ -75,7 +52,7 @@ export default function Login() {
                                 pattern: new RegExp(
                                     /^[A-Za-z0-9\u4e00-\u9fa5.]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
                                 ),
-                                type: 'email',
+                                type: "email",
                                 message: "'email' is not a valid email",
                             },
                         ]}

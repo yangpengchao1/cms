@@ -59,13 +59,13 @@ const courseFunctions: LeftSideMenu = {
             parentNodeLabel:"Course",
         },
         {
-            href: "/dashboard/manager/add-course",
+            href: "/dashboard/manager/courses/add-course",
             label: "Add Course",
             icon: <FileAddOutlined/>,
             parentNodeLabel:"Course",
         },
         {
-            href: "/dashboard/manager/edit-course",
+            href: "/dashboard/manager/courses/edit-course",
             label: "Edit Course",
             icon: <EditOutlined/>,
             parentNodeLabel:"Course",

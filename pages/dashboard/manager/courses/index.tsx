@@ -26,7 +26,6 @@ export default function Courses() {
         const getCoursesRequest = new GetCoursesRequest(page, limit);
         const resp: AxiosResponse<BaseResponse<GetCoursesResponse>> =
             await courseAPI.getCourseList(getCoursesRequest);
-        console.log(resp.data.data.courses);
         setData([...data, ...resp.data.data.courses]);
         setTotal(resp.data.data.total);
         setLoading(false);

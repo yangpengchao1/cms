@@ -6,7 +6,7 @@ import {UpdateStudentRequest} from "../libs/Entity/request/UpdateStudentRequest"
 
 const StudentForm = (props: PropsWithChildren<any>) => {
 
-    const {studentData, setVisible, addOrUpdate, doRefresh,setLoading} = props;
+    const {studentData, setVisible, addOrUpdate, doRefresh, setLoading} = props;
 
     const {Option} = Select;
 
@@ -67,11 +67,11 @@ const StudentForm = (props: PropsWithChildren<any>) => {
             form={form}
             name="form_in_modal"
             initialValues={{
-                'id': studentData?.id,
-                'name': studentData?.name,
-                'email': studentData?.email,
-                'country': studentData?.country,
-                'type': studentData?.type.id.toString(),
+                id: studentData?.id,
+                name: studentData?.name,
+                email: studentData?.email,
+                country: studentData?.country,
+                type: studentData?.type.id.toString()
             }}
         >
             <Form.Item name="id" hidden="true"/>

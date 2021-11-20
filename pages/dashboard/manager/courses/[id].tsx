@@ -1,4 +1,4 @@
-import {Button, Card, Col, Collapse, Row, Steps, Table, Tag} from "antd";
+import {Card, Col, Collapse, Row, Steps, Table, Tag} from "antd";
 import AppLayout from "../../../../components/layout/AppLayout";
 import React, {PropsWithChildren, useEffect, useState} from "react";
 import {AxiosResponse} from "axios";
@@ -12,13 +12,13 @@ import {Panel} from "rc-collapse";
 // @ts-ignore
 import {v4} from "uuid";
 import {Column} from "rc-table";
+
 const { Step } = Steps;
 
 //刷新的时候，服务器可以抓到id，从而进行数据抓取
 export async function getServerSideProps(context: { params: { id: any; }; }) {
     // todo get student profile here;
     const {id} = context.params;
-
     return {
         props: {id},
     };
@@ -37,33 +37,22 @@ export default function CourseDetail(props: PropsWithChildren<any>) {
             const getCourseDetailRequest = new GetCourseDetailRequest(id as unknown as number);
             const resp: AxiosResponse<BaseResponse<Course>> = await courseAPI.getCourseDetail(getCourseDetailRequest);
             setCourseData(resp.data.data);
-            setClassTimeData(resp.data.data.schedule.classTime);
+            setClassTimeData(resp.data.data?.schedule.classTime);
         })();
     }, []);
 
     function setClassTimeData(classTime: string[]) {
-        classTime.forEach((item) => {
+        let mapData=new Map();
+        classTime.forEach((item,index) => {
             const content = item.split(" ");
-            // console.log(content)
-            // @ts-ignore
-            // debugger
-            // classTimeMap.set(content[0], content[1]);
-
-            setClassTimeMap(new Map([content[0],content[1]]));
+            mapData.set(content[0],content[1])
         })
-        // debugger
-        console.log(classTimeMap)
-        // console.log(classTimeMap.get("Friday"))
+        setClassTimeMap(mapData);
     }
 
     const data = [
         {
-            key: '1',
-            firstName: 'John',
-            lastName: 'Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
+
         }
     ];
 
@@ -156,8 +145,8 @@ export default function CourseDetail(props: PropsWithChildren<any>) {
                         <h1>Course Code</h1>
                         <p>{courseData?.uid}</p>
                         <h1>Class Time</h1>
-                        <Table dataSource={data}>
-                            <Column title="Sunday" key="Sunday" render={(_,_1,_2) => 11}/>
+                        <Table dataSource={data} pagination={false}>
+                            <Column title="Sunday" key="Sunday" render={() => classTimeMap?.get("Sunday")}/>
                             <Column title="Monday" key="Monday" render={() => classTimeMap?.get("Monday")}/>
                             <Column title="Tuesday" key="Tuesday" render={() => classTimeMap?.get("Tuesday")}/>
                             <Column title="Wednesday" key="Wednesday" render={() => classTimeMap?.get("Wednesday")}/>
