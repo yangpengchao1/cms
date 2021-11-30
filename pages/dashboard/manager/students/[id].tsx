@@ -8,7 +8,6 @@ import {TabPane} from "rc-tabs";
 // @ts-ignore
 import {v4} from "uuid";
 import {Student} from "../../../../libs/Entity/Student";
-import {AxiosResponse} from "axios";
 import {BaseResponse} from "../../../../libs/Entity/response/BaseResponse";
 import {Course} from "../../../../libs/Entity/Course";
 
@@ -31,9 +30,9 @@ export default function StudentDetails(props: PropsWithChildren<any>) {
         (async () => {
             const {id} = router.query;
             const getStudentRequest = new GetStudentRequest(id);
-            const resp: AxiosResponse<BaseResponse<Student>> = await studentAPI.getStudent(getStudentRequest);
-            setStudentData(resp.data.data);
-            setCourses(resp.data.data.courses);
+            const resp: BaseResponse<Student> = await studentAPI.getStudent(getStudentRequest);
+            setStudentData(resp.data);
+            setCourses(resp.data?.courses);
         })();
     }, []);
 

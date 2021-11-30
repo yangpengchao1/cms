@@ -4,7 +4,7 @@ import {RequestURL} from "../../enum/RequestURL";
 
 export class LogoutRequest extends BaseRequest {
 
-    public convertToJsonString(): string {
+    public getRequestData(): string {
         return JSON.stringify({});
     }
 

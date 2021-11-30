@@ -2,7 +2,6 @@ import AppLayout from "../../../../components/layout/AppLayout";
 import React, {useCallback, useEffect, useState} from "react";
 import {BackTop, Button, Card, Col, Divider, List, Row, Skeleton} from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {AxiosResponse} from "axios";
 import {BaseResponse} from "../../../../libs/Entity/response/BaseResponse";
 import {courseAPI} from "../../../../libs/API/CourseAPI";
 import {GetCoursesRequest} from "../../../../libs/Entity/request/GetCoursesRequest";
@@ -24,10 +23,12 @@ export default function Courses() {
         }
         setLoading(true);
         const getCoursesRequest = new GetCoursesRequest(page, limit);
-        const resp: AxiosResponse<BaseResponse<GetCoursesResponse>> =
+        const resp: BaseResponse<GetCoursesResponse> =
             await courseAPI.getCourseList(getCoursesRequest);
-        setData([...data, ...resp.data.data.courses]);
-        setTotal(resp.data.data.total);
+        // @ts-ignore
+        setData([...data, ...resp.data?.courses]);
+        // @ts-ignore
+        setTotal(resp.data?.total);
         setLoading(false);
     }, [page]);
 
@@ -45,7 +46,7 @@ export default function Courses() {
                     height: "100vh",
                     overflow: "auto",
                     padding: "0",
-                    border: "1px solid rgba(140, 140, 140, 0.35)",
+                    border: "1px solid rgba(140, 140, 140, 0.35)"
                 }}
             >
                 <InfiniteScroll

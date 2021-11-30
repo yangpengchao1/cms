@@ -1,7 +1,6 @@
 import {Card, Col, Collapse, Row, Steps, Table, Tag} from "antd";
 import AppLayout from "../../../../components/layout/AppLayout";
 import React, {PropsWithChildren, useEffect, useState} from "react";
-import {AxiosResponse} from "axios";
 import {BaseResponse} from "../../../../libs/Entity/response/BaseResponse";
 import {useRouter} from "next/router";
 import {Course} from "../../../../libs/Entity/Course";
@@ -35,9 +34,9 @@ export default function CourseDetail(props: PropsWithChildren<any>) {
         (async () => {
             const {id} = router.query;
             const getCourseDetailRequest = new GetCourseDetailRequest(id as unknown as number);
-            const resp: AxiosResponse<BaseResponse<Course>> = await courseAPI.getCourseDetail(getCourseDetailRequest);
-            setCourseData(resp.data.data);
-            setClassTimeData(resp.data.data?.schedule.classTime);
+            const resp: BaseResponse<Course> = await courseAPI.getCourseDetail(getCourseDetailRequest);
+            setCourseData(resp.data);
+            setClassTimeData(resp.data?.schedule.classTime);
         })();
     }, []);
 
@@ -139,7 +138,7 @@ export default function CourseDetail(props: PropsWithChildren<any>) {
                         <h1>Status</h1>
                         <Steps size="small" current={-1} style={{ width: 'auto',marginBottom: 20}}>
                         {courseData?.schedule.chapters.map((item) => (
-                            <Step title={item.name}  />
+                            <Step title={item.name} key={item.name}  />
                             ))}
                         </Steps>
                         <h1>Course Code</h1>

@@ -9,7 +9,7 @@ export class AddStudentRequest extends BaseRequest {
     private "_email": string;
     private "_type": number;
 
-    convertToJsonString(): string {
+    getRequestData(): string {
         return JSON.stringify({
             name: this.name,
             country: this.country,

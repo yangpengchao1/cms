@@ -1,6 +1,5 @@
 import {BaseResponse} from "../Entity/response/BaseResponse";
 import BaseAPI from "./BaseAPI";
-import {AxiosResponse} from "axios";
 import {GetStudentsRequest} from "../Entity/request/GetStudentsRequest";
 import {GetStudentsResponse} from "../Entity/response/GetStudentsResponse";
 import {AddStudentRequest} from "../Entity/request/AddStudentRequest";
@@ -12,23 +11,23 @@ import {UpdateStudentResponse} from "../Entity/response/UpdateStudentResponse";
 import {Student} from "../Entity/Student";
 
 class StudentAPI extends BaseAPI {
-    public getStudentList(req: GetStudentsRequest): Promise<AxiosResponse<BaseResponse<GetStudentsResponse>>> {
+    public getStudentList(req: GetStudentsRequest): Promise<BaseResponse<GetStudentsResponse>> {
         return this.createGet(req);
     }
 
-    public addStudent(req: AddStudentRequest): Promise<AxiosResponse<BaseResponse<AddStudentResponse>>> {
+    public addStudent(req: AddStudentRequest): Promise<BaseResponse<AddStudentResponse>> {
         return this.createPost(req);
     }
 
-    public deleteStudent(req: DeleteStudentRequest): Promise<AxiosResponse<BaseResponse<boolean>>> {
+    public deleteStudent(req: DeleteStudentRequest): Promise<BaseResponse<boolean>> {
         return this.createDelete(req);
     }
 
-    public getStudent(req: GetStudentRequest): Promise<AxiosResponse<BaseResponse<Student>>> {
+    public getStudent(req: GetStudentRequest): Promise<BaseResponse<Student>> {
         return this.createGet(req);
     }
 
-    public updateStudent(req: UpdateStudentRequest): Promise<AxiosResponse<BaseResponse<UpdateStudentResponse>>> {
+    public updateStudent(req: UpdateStudentRequest): Promise<BaseResponse<UpdateStudentResponse>> {
         return this.createPut(req);
     }
 }

@@ -31,7 +31,7 @@ export default function Step1(props: PropsWithChildren<any>) {
 
     const createCourse = () => {
         console.log(123)
-        debugger
+        // debugger
         setCurrent(current + 1);
     }
 

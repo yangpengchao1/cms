@@ -9,7 +9,7 @@ export class GetStudentsRequest extends BaseRequest {
     private "_page": number;
     private "_limit": number;
 
-    public convertToJsonString(): string {
+    public getRequestData(): string {
         return JSON.stringify({});
     }
 
@@ -47,11 +47,12 @@ export class GetStudentsRequest extends BaseRequest {
         this._query = value;
     }
 
-    get userId(): number {
-        return <number>this._userId;
+
+    get userId(): number | undefined {
+        return this._userId;
     }
 
-    set userId(value: number) {
+    set userId(value: number | undefined) {
         this._userId = value;
     }
 

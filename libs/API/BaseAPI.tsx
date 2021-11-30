@@ -1,4 +1,4 @@
-import axios, {AxiosError, AxiosResponse} from "axios";
+import axios, {AxiosError} from "axios";
 import {BaseResponse} from "../Entity/response/BaseResponse";
 import {BaseRequest} from "../Entity/request/BaseRequest";
 import {message} from "antd";
@@ -25,36 +25,46 @@ export default class BaseAPI {
         return headers;
     }
 
-    protected createPost(baseRequest: BaseRequest): Promise<AxiosResponse<BaseResponse<any>>> {
-        let data = baseRequest.convertToJsonString();
+    protected createPost(baseRequest: BaseRequest): Promise<BaseResponse<any>> {
+        let data = baseRequest.getRequestData();
         if (data === "") {
             data = "{}";
         }
-        return axios.post(baseRequest.requestURL(), data, this.getHeaders(baseRequest.needToken()));
+        // debugger
+        return axios.post<BaseResponse<any>>(baseRequest.requestURL(), data, this.getHeaders(baseRequest.needToken()))
+            .then((res) => res.data.data).catch(this.errorHandler);
     }
 
-    protected createGet(baseRequest: BaseRequest): Promise<AxiosResponse<BaseResponse<any>>> {
-        return axios.get(baseRequest.requestURL(), this.getHeaders(baseRequest.needToken()));
+    protected createGet(baseRequest: BaseRequest): Promise<BaseResponse<any>> {
+        return axios.get(baseRequest.requestURL(), this.getHeaders(baseRequest.needToken()))
+            .then((res) => res.data.data).catch(this.errorHandler);
     }
 
-    protected createDelete(baseRequest: BaseRequest): Promise<AxiosResponse<BaseResponse<any>>> {
-        return axios.delete(baseRequest.requestURL(), this.getHeaders(baseRequest.needToken()));
+    protected createDelete(baseRequest: BaseRequest): Promise<BaseResponse<any>> {
+        return axios.delete(baseRequest.requestURL(), this.getHeaders(baseRequest.needToken()))
+            .then((res) => res.data.data).catch(this.errorHandler);
     }
 
-    protected createPut(baseRequest: BaseRequest): Promise<AxiosResponse<BaseResponse<any>>> {
-        const data = baseRequest.convertToJsonString();
-        return axios.put(baseRequest.requestURL(), data, this.getHeaders(baseRequest.needToken()));
+    protected createPut(baseRequest: BaseRequest): Promise<BaseResponse<any>> {
+        const data = baseRequest.getRequestData();
+        return axios.put(baseRequest.requestURL(), data, this.getHeaders(baseRequest.needToken()))
+            .then((res) => res.data.data).catch(this.errorHandler);
     }
 
     /**
      * 显示 Api 上的提示信息
      */
-    protected showMessage = (isSuccessDisplay = false) =>
-        (res: AxiosResponse<BaseResponse<any>>): AxiosResponse<BaseResponse<any>> => {
-            const {code, msg} = res.data;
+    protected showMessage = (err_msg: string, isSuccessDisplay = false) =>
+        (res: BaseResponse): BaseResponse => {
+        // debugger
+
+            let {code, msg} = res;
             const isError = this.isError(code);
 
             if (isError) {
+                if (err_msg !== "") {
+                    msg = err_msg;
+                }
                 message.error(msg);
             }
 

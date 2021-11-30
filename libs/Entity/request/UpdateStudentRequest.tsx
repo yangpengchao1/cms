@@ -4,7 +4,7 @@ export class UpdateStudentRequest extends AddStudentRequest {
 
     private "_id": number|string;
 
-    convertToJsonString(): string {
+    getRequestData(): string {
         return JSON.stringify({
             id: this.id,
             name: this.name,

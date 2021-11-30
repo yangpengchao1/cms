@@ -11,16 +11,16 @@ export class GetCoursesRequest extends BaseRequest {
     private _uid: string | undefined;
     private _userId: number | undefined;
 
-    public convertToJsonString(): string {
+    public getRequestData(): string {
         return JSON.stringify({});
     }
 
     requestURL(): string {
         let url = API_HOST + RequestURL.COURSE_LIST + `?page=` + this.page + `&limit=` + this.limit;
         const name = this.name;
-        const userId = this.userId;
-        const type = this.type;
-        const uid = this.uid;
+        const userId = this._userId;
+        const type = this._type;
+        const uid = this._uid;
         if (name !== undefined) {
             url = url + `&name=` + name;
         }
@@ -62,35 +62,35 @@ export class GetCoursesRequest extends BaseRequest {
         this._limit = value;
     }
 
-    get name(): string {
-        return <string>this._name;
+    get name(): string | undefined {
+        return this._name;
     }
 
-    set name(value: string) {
+    set name(value: string | undefined) {
         this._name = value;
     }
 
-    get type(): string {
-        return <string>this._type;
+    get type(): string | undefined {
+        return this._type;
     }
 
-    set type(value: string) {
+    set type(value: string | undefined) {
         this._type = value;
     }
 
-    get uid(): string {
-        return <string>this._uid;
+    get uid(): string | undefined {
+        return this._uid;
     }
 
-    set uid(value: string) {
+    set uid(value: string | undefined) {
         this._uid = value;
     }
 
-    get userId(): number {
-        return <number>this._userId;
+    get userId(): number | undefined {
+        return this._userId;
     }
 
-    set userId(value: number) {
+    set userId(value: number | undefined) {
         this._userId = value;
     }
 }

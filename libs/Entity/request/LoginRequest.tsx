@@ -12,7 +12,7 @@ export class LoginRequest extends BaseRequest {
         return false;
     }
 
-    public convertToJsonString(): string {
+    public getRequestData(): string {
         return JSON.stringify({
             email: this.email,
             role: this.role,

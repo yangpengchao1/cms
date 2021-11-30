@@ -1,5 +1,5 @@
 export abstract class BaseRequest {
-    public abstract convertToJsonString(): string;
+    public abstract getRequestData(): string;
 
     abstract requestURL(): string;
 

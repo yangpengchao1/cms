@@ -17,18 +17,30 @@ export default function Login() {
         const {email, password, role} = values;
 
         let loginRequest = new LoginRequest(email, password, role);
-        const resp = await authAPI.login(loginRequest);
-        const {code, data} = resp.data;
-        if (code === 201) {
-            //存储信息
+
+        const { data } = await authAPI.login(loginRequest);
+
+        if (!!data) {
+            // storage.setUserInfo(data);
             localStorage.setItem("token", data.token);
-            localStorage.setItem("userId", data.userId);
-            localStorage.setItem("role", data.role);
-            //跳转页面
-            await router.push("/dashboard");
-        } else {
-            message.error("用户名或密码错误");
+                localStorage.setItem("userId", data.userId.toString());
+                localStorage.setItem("role", data.role);
+            router.push('dashboard');
         }
+
+        // const resp = await authAPI.login(loginRequest);
+        // debugger
+        // const {code, data} = resp;
+        // if (code === 201) {
+        //     //存储信息
+        //     localStorage.setItem("token", data.token);
+        //     localStorage.setItem("userId", data.userId);
+        //     localStorage.setItem("role", data.role);
+        //     //跳转页面
+        //     await router.push("/dashboard");
+        // } else {
+        //     message.error("用户名或密码错误");
+        // }
     };
 
     return (

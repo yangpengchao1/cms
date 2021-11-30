@@ -6,7 +6,7 @@ export class GetCourseDetailRequest extends BaseRequest {
 
     private _id: number;
 
-    convertToJsonString(): string {
+    getRequestData(): string {
         return "";
     }
 
